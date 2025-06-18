@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizar Proyectos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container py-5">
+    <h2 class="mb-4 text-center">Proyectos Registrados</h2>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Categoría</th>
+          <th>Descripción</th>
+          <th>Responsable</th>
+          <th>Participantes</th>
+          <th>Fecha</th>
+          <th>Estatus</th>
+        </tr>
+      </thead>
+      <tbody id="cuerpoTabla"></tbody>
+    </table>
+
+    <div class="text-center mt-3">
+      <button id="btnMenu" class="btn btn-secondary">Volver al menú principal</button>
+    </div>
+  </div>
+
+  <script>
+    const cuerpoTabla = document.getElementById('cuerpoTabla');
+    const btnMenu = document.getElementById('btnMenu');
+
+    async function cargarProyectos() {
+      try {
+        const resp = await fetch('/api/proyectos');
+        if (resp.ok) {
+          const proyectos = await resp.json();
+          cuerpoTabla.innerHTML = '';
+          proyectos.forEach(p => {
+            cuerpoTabla.innerHTML += `
+              <tr>
+                <td>${p.titulo}</td>
+                <td>${p.categoria}</td>
+                <td>${p.descripcion}</td>
+                <td>${p.responsable}</td>
+                <td>${p.participantes}</td>
+                <td>${p.fecha}</td>
+                <td>${p.estatus}</td>
+              </tr>
+            `;
+          });
+
+          if (proyectos.length === 0) {
+            cuerpoTabla.innerHTML = '<tr><td colspan="7">No hay proyectos registrados.</td></tr>';
+          }
+
+        } else {
+          cuerpoTabla.innerHTML = '<tr><td colspan="7">Error al obtener proyectos</td></tr>';
+        }
+      } catch (error) {
+        cuerpoTabla.innerHTML = '<tr><td colspan="7">Error de conexión</td></tr>';
+      }
+    }
+
+    btnMenu.addEventListener('click', () => {
+      window.location.href = 'index.html';
+    });
+
+    cargarProyectos();
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,104 @@
+body {
+  background-color: #0A3D0A;  /* Verde muy oscuro */
+  color: #D0F0D0;  /* Verde claro */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: #A0E080;  /* Verde claro fuerte */
+}
+
+a {
+  color: #A0E080;
+}
+
+a:hover {
+  color: #C0F0A0;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background-color: #1E7E1E;  /* Verde fuerte */
+  border-color: #1E7E1E;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #3AB03A;
+  border-color: #3AB03A;
+}
+
+.btn-success {
+  background-color: #2BB32B;  /* Verde vivo */
+  border-color: #2BB32B;
+  color: white;
+}
+
+.btn-success:hover {
+  background-color: #48D148;
+  border-color: #48D148;
+}
+
+.btn-danger {
+  background-color: #B32B2B;  /* Rojo muy suave, para que no haya amarillo ni marrón */
+  border-color: #B32B2B;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #D14848;
+  border-color: #D14848;
+}
+
+.btn-warning {
+  background-color: #4CAF50;  /* Verde medio para warning, nada amarillo */
+  border-color: #4CAF50;
+  color: white;
+}
+
+.btn-warning:hover {
+  background-color: #66BB6A;
+  border-color: #66BB6A;
+}
+
+.btn-secondary {
+  background-color: #166916;  /* Verde oscuro */
+  border-color: #166916;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #2B8A2B;
+  border-color: #2B8A2B;
+}
+
+.table {
+  color: #D0F0D0;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #0C550C;
+}
+
+.form-label {
+  color: #D0F0D0;
+}
+
+.form-control, .form-select {
+  background-color: #145214;
+  color: #D0F0D0;
+  border: 1px solid #3AB03A;
+}
+
+.form-control:focus, .form-select:focus {
+  background-color: #3AB03A;
+  color: white;
+  border-color: #A0E080;
+  box-shadow: 0 0 5px #A0E080;
+}
+
+.container {
+  background-color: #0C550C;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px #0A3D0A;
+}
