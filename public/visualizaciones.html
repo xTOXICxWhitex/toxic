@@ -1,6 +1,6 @@
 <?php
-// conectar a base de datos (ajusta según tu configuración)
-$conexion = new mysqli("localhost", "usuario", "contraseña", "basededatos");
+// Conexión a la base de datos
+$conexion = new mysqli("localhost", "usuario", "contraseña", "basedatos");
 if ($conexion->connect_error) {
     die("Error de conexión: " . $conexion->connect_error);
 }
@@ -13,60 +13,86 @@ $resultado = $conexion->query($sql);
 <html lang="es">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Visualizar Proyectos</title>
-<link rel="stylesheet" href="styles.css" />
 <style>
-  /* Solo el ajuste para fondo negro y letras verdes en la tabla */
-  .table-responsive {
-    background-color: #000000; /* fondo negro */
+  body {
+    background-color: #121212;
+    color: #00ff00;
+    font-family: 'Press Start 2P', monospace, sans-serif;
+    margin: 30px;
   }
-  .table {
-    color: #00ff00; /* letras verde fuerte */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #000000;
+  }
+  th, td {
+    border: 1px solid #00ff00;
+    padding: 8px 12px;
+    text-align: left;
+    white-space: nowrap;
+  }
+  thead {
+    background-color: #003300;
+  }
+  tbody tr:nth-child(odd) {
+    background-color: #002200;
+  }
+  tbody tr:nth-child(even) {
+    background-color: #004400;
+  }
+  a.button {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #009900;
+    color: #000;
+    font-weight: bold;
+    text-decoration: none;
+    border: 2px solid #00ff00;
+    border-radius: 6px;
+  }
+  a.button:hover {
+    background-color: #00ff00;
+    color: #000;
+    box-shadow: 0 0 8px #00ff00;
   }
 </style>
 </head>
 <body>
-<div class="container">
-  <h1>Visualizar Proyectos</h1>
 
-  <div class="table-responsive">
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Nombre</th>
-          <th>Descripción</th>
-          <th>Fecha</th>
-          <!-- agrega más columnas si tienes -->
-        </tr>
-      </thead>
-      <tbody>
-        <?php
-        if ($resultado && $resultado->num_rows > 0) {
-          while ($fila = $resultado->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . htmlspecialchars($fila['id']) . "</td>";
-            echo "<td>" . htmlspecialchars($fila['nombre']) . "</td>";
-            echo "<td>" . htmlspecialchars($fila['descripcion']) . "</td>";
-            echo "<td>" . htmlspecialchars($fila['fecha']) . "</td>";
-            echo "</tr>";
-          }
-        } else {
-          echo "<tr><td colspan='4'>No hay proyectos para mostrar</td></tr>";
-        }
-        ?>
-      </tbody>
-    </table>
-  </div>
+<h1>Visualizar Proyectos</h1>
 
-  <div style="text-align:center; margin-top: 20px;">
-    <a href="index.php" class="btn btn-primary">Regresar al Menú Principal</a>
-  </div>
-</div>
-</body>
-</html>
+<?php if ($resultado && $resultado->num_rows > 0): ?>
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Descripción</th>
+        <th>Fecha</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php while($fila = $resultado->fetch_assoc()): ?>
+      <tr>
+        <td><?php echo htmlspecialchars($fila['id']); ?></td>
+        <td><?php echo htmlspecialchars($fila['nombre']); ?></td>
+        <td><?php echo htmlspecialchars($fila['descripcion']); ?></td>
+        <td><?php echo htmlspecialchars($fila['fecha']); ?></td>
+      </tr>
+      <?php endwhile; ?>
+    </tbody>
+  </table>
+<?php else: ?>
+  <p>No hay proyectos para mostrar.</p>
+<?php endif; ?>
+
+<a href="index.php" class="button">Regresar al Menú Principal</a>
 
 <?php
 $conexion->close();
 ?>
+
+</body>
+</html>
