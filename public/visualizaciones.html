@@ -1,98 +1,82 @@
-<?php
-// Conexión a la base de datos
-$conexion = new mysqli("localhost", "usuario", "contraseña", "basedatos");
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
-}
-
-$sql = "SELECT * FROM proyectos ORDER BY id";
-$resultado = $conexion->query($sql);
-?>
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8" />
-<title>Visualizar Proyectos</title>
-<style>
-  body {
-    background-color: #121212;
-    color: #00ff00;
-    font-family: 'Press Start 2P', monospace, sans-serif;
-    margin: 30px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #000000;
-  }
-  th, td {
-    border: 1px solid #00ff00;
-    padding: 8px 12px;
-    text-align: left;
-    white-space: nowrap;
-  }
-  thead {
-    background-color: #003300;
-  }
-  tbody tr:nth-child(odd) {
-    background-color: #002200;
-  }
-  tbody tr:nth-child(even) {
-    background-color: #004400;
-  }
-  a.button {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 10px 20px;
-    background-color: #009900;
-    color: #000;
-    font-weight: bold;
-    text-decoration: none;
-    border: 2px solid #00ff00;
-    border-radius: 6px;
-  }
-  a.button:hover {
-    background-color: #00ff00;
-    color: #000;
-    box-shadow: 0 0 8px #00ff00;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <title>Visualizar Proyectos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      background-color: #121212;
+      color: #00ff00;
+      font-family: 'Press Start 2P', monospace, sans-serif;
+      margin: 30px;
+    }
+    table {
+      background-color: #000000;
+    }
+    thead tr {
+      background-color: #003300;
+      color: #ccffcc;
+    }
+    tbody tr:nth-child(odd) {
+      background-color: #002200;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #004400;
+    }
+    a.btn-secondary {
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
 </head>
 <body>
-
-<h1>Visualizar Proyectos</h1>
-
-<?php if ($resultado && $resultado->num_rows > 0): ?>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Descripción</th>
-        <th>Fecha</th>
-      </tr>
-    </thead>
-    <tbody>
-      <?php while($fila = $resultado->fetch_assoc()): ?>
-      <tr>
-        <td><?php echo htmlspecialchars($fila['id']); ?></td>
-        <td><?php echo htmlspecialchars($fila['nombre']); ?></td>
-        <td><?php echo htmlspecialchars($fila['descripcion']); ?></td>
-        <td><?php echo htmlspecialchars($fila['fecha']); ?></td>
-      </tr>
-      <?php endwhile; ?>
-    </tbody>
-  </table>
-<?php else: ?>
-  <p>No hay proyectos para mostrar.</p>
-<?php endif; ?>
-
-<a href="index.php" class="button">Regresar al Menú Principal</a>
-
-<?php
-$conexion->close();
-?>
-
+  <div class="container py-5">
+    <h2 class="mb-4 text-center">Visualizar Proyectos</h2>
+    <div class="table-responsive">
+      <table class="table table-striped table-bordered text-success">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Responsable</th>
+            <th>Participantes</th>
+            <th>Fecha</th>
+            <th>Estatus</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Proyecto A</td>
+            <td>Ciencia</td>
+            <td>Descripción A</td>
+            <td>Juan</td>
+            <td>5</td>
+            <td>2025-06-21</td>
+            <td>Activo</td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>Proyecto B</td>
+            <td>Arte</td>
+            <td>Descripción B</td>
+            <td>Ana</td>
+            <td>3</td>
+            <td>2025-06-20</td>
+            <td>Finalizado</td>
+          </tr>
+          <!-- más filas aquí -->
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center">
+      <a href="index.html" class="btn btn-secondary">Regresar al Menú Principal</a>
+    </div>
+  </div>
 </body>
 </html>
+
