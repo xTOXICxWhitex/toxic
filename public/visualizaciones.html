@@ -2,90 +2,58 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Visualizar Proyectos</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* Sobrescribo estilos para la tabla */
-    table.table {
-      background-color: #064d06 !important; /* verde oscuro */
-      color: black !important; /* texto negro */
-      font-size: 0.85rem; /* tamaño un poco más pequeño */
-    }
-    table.table th, table.table td {
-      vertical-align: middle;
-      border: 1px solid #0a990a !important; /* borde verde neón */
-    }
-    table.table-striped > tbody > tr:nth-of-type(odd) {
-      background-color: #0a6b0a !important; /* otro verde oscuro para filas impares */
-    }
-  </style>
 </head>
 <body>
-  <div class="container py-5">
-    <h2 class="mb-4 text-center">Proyectos Registrados</h2>
+  <div class="container">
+    <h1>Visualizar Proyectos</h1>
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID Proyecto</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Fecha Inicio</th>
+            <th>Fecha Fin</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>PR001</td>
+            <td>Proyecto Alpha</td>
+            <td>Implementar sistema de inventario con control total.</td>
+            <td>2025-01-10</td>
+            <td>2025-04-10</td>
+            <td>En progreso</td>
+          </tr>
+          <tr>
+            <td>PR002</td>
+            <td>Proyecto Beta</td>
+            <td>Desarrollo de plataforma web para gestión escolar.</td>
+            <td>2025-02-15</td>
+            <td>2025-06-15</td>
+            <td>Finalizado</td>
+          </tr>
+          <tr>
+            <td>PR003</td>
+            <td>Proyecto Gamma</td>
+            <td>Automatización de procesos administrativos internos.</td>
+            <td>2025-03-01</td>
+            <td>2025-07-01</td>
+            <td>En revisión</td>
+          </tr>
+          <!-- Puedes agregar más filas aquí -->
+        </tbody>
+      </table>
+    </div>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Título</th>
-          <th>Categoría</th>
-          <th>Descripción</th>
-          <th>Responsable</th>
-          <th>Participantes</th>
-          <th>Fecha</th>
-          <th>Estatus</th>
-        </tr>
-      </thead>
-      <tbody id="cuerpoTabla"></tbody>
-    </table>
-
-    <div class="text-center mt-3">
-      <button id="btnMenu" class="btn btn-secondary">Volver al menú principal</button>
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="index.html" class="btn btn-primary">Regresar al Menú Principal</a>
     </div>
   </div>
-
-  <script>
-    const cuerpoTabla = document.getElementById('cuerpoTabla');
-    const btnMenu = document.getElementById('btnMenu');
-
-    async function cargarProyectos() {
-      try {
-        const resp = await fetch('/api/proyectos');
-        if (resp.ok) {
-          const proyectos = await resp.json();
-          cuerpoTabla.innerHTML = '';
-          proyectos.forEach(p => {
-            cuerpoTabla.innerHTML += `
-              <tr>
-                <td>${p.titulo}</td>
-                <td>${p.categoria}</td>
-                <td>${p.descripcion}</td>
-                <td>${p.responsable}</td>
-                <td>${p.participantes}</td>
-                <td>${p.fecha}</td>
-                <td>${p.estatus}</td>
-              </tr>
-            `;
-          });
-
-          if (proyectos.length === 0) {
-            cuerpoTabla.innerHTML = '<tr><td colspan="7">No hay proyectos registrados.</td></tr>';
-          }
-
-        } else {
-          cuerpoTabla.innerHTML = '<tr><td colspan="7">Error al obtener proyectos</td></tr>';
-        }
-      } catch (error) {
-        cuerpoTabla.innerHTML = '<tr><td colspan="7">Error de conexión</td></tr>';
-      }
-    }
-
-    btnMenu.addEventListener('click', () => {
-      window.location.href = 'index.html';
-    });
-
-    cargarProyectos();
-  </script>
 </body>
 </html>

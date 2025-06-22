@@ -10,7 +10,7 @@ body {
   position: relative;
 }
 
-/* Fondo concreto muy sutil (puedes cambiar la URL a tu imagen concreta) */
+/* Fondo concreto muy sutil */
 body::before {
   content: "";
   position: fixed;
@@ -33,11 +33,9 @@ body::before {
   box-shadow: 0 0 15px #00ff00cc;
 }
 
-/* Agregar el icono radioactivo en las 4 esquinas */
+/* Íconos radioactivos en las esquinas */
 .container::before,
-.container::after,
-.container > .corner-top-right,
-.container > .corner-bottom-left {
+.container::after {
   content: "";
   position: absolute;
   width: 40px;
@@ -57,17 +55,10 @@ body::before {
   top: 10px;
   right: 10px;
 }
-.container > .corner-top-right {
-  top: calc(100% - 50px);
-  left: 10px;
-}
-.container > .corner-bottom-left {
-  bottom: 10px;
-  right: 10px;
-}
 
-/* Para esos 2 últimos pseudo-elementos que no existen, crear elementos en HTML */
-.corner-top-right, .corner-bottom-left {
+/* Para esquinas inferiores crea estos elementos en HTML con clase */
+.corner-bottom-left,
+.corner-bottom-right {
   position: absolute;
   width: 40px;
   height: 40px;
@@ -78,16 +69,16 @@ body::before {
   pointer-events: none;
   z-index: 10;
 }
-.corner-top-right {
+.corner-bottom-left {
   bottom: 10px;
   left: 10px;
 }
-.corner-bottom-left {
+.corner-bottom-right {
   bottom: 10px;
   right: 10px;
 }
 
-/* Títulos h1, h2 */
+/* Títulos */
 h1, h2 {
   color: #00ff00;
   text-shadow: 0 0 8px #00ff00;
@@ -105,7 +96,7 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Botones de bootstrap personalizados */
+/* Botones bootstrap personalizados */
 .btn-primary {
   background-color: #009900;
   border-color: #00ff00;
@@ -183,11 +174,32 @@ a:hover {
 }
 
 /* Tablas */
-.table {
-  background-color: #001100;
-  color: #00ff00;
+.table-responsive {
+  overflow-x: auto;
+  margin-bottom: 1rem;
   border: 2px solid #00ff00;
+  border-radius: 8px;
+  background-color: #001100;
+  padding: 10px;
 }
+
+.table {
+  font-size: 0.85rem;
+  color: #00ff00;
+  min-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0;
+  background-color: transparent;
+  border: none;
+}
+
+.table th, .table td {
+  white-space: nowrap;
+  vertical-align: middle;
+  padding: 8px 12px;
+  border: 1px solid #00ff00;
+}
+
 .table thead {
   background-color: #003300;
   color: #ccffcc;
@@ -256,3 +268,4 @@ h1, .nav-buttons {
   color: #000;
   box-shadow: 0 0 20px #00ff00;
 }
+
