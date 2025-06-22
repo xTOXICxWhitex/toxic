@@ -5,83 +5,10 @@
   <title>Proyecto PAEC - Menú Principal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-  <style>
-    body {
-      background-color: #0A3D0A;
-      color: #D0F0D0;
-      position: relative;
-      min-height: 100vh;
-      margin: 0;
-      padding: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    /* Imagen de fondo biohazard */
-    .background-logo {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      width: 300px;
-      height: 300px;
-      opacity: 0.1;
-      transform: translate(-50%, -50%);
-      z-index: 0;
-      user-select: none;
-      pointer-events: none;
-    }
-    /* Contenedor del menú para que quede arriba */
-    .menu-container {
-      position: relative;
-      z-index: 10;
-      padding-top: 3rem;
-    }
-    h1 {
-      color: #A0E080;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      text-shadow: 0 0 5px #3AB03A;
-    }
-    .btn-primary {
-      background-color: #1E7E1E;
-      border-color: #1E7E1E;
-      color: white;
-    }
-    .btn-primary:hover {
-      background-color: #3AB03A;
-      border-color: #3AB03A;
-    }
-    .btn-success {
-      background-color: #2BB32B;
-      border-color: #2BB32B;
-      color: white;
-    }
-    .btn-success:hover {
-      background-color: #48D148;
-      border-color: #48D148;
-    }
-    .btn-danger {
-      background-color: #B32B2B;
-      border-color: #B32B2B;
-      color: white;
-    }
-    .btn-danger:hover {
-      background-color: #D14848;
-      border-color: #D14848;
-    }
-    .btn-warning {
-      background-color: #4CAF50;
-      border-color: #4CAF50;
-      color: white;
-    }
-    .btn-warning:hover {
-      background-color: #66BB6A;
-      border-color: #66BB6A;
-    }
-  </style>
 </head>
 <body>
-  <img src="img/biohazard-sign.png" alt="Logo Biohazard" class="background-logo" />
-  <div class="container menu-container text-center py-5">
-    <h1>Proyecto PAEC</h1>
+  <div class="container py-5 text-center">
+    <h1 class="mb-4">Proyecto PAEC</h1>
     <div class="d-grid gap-3 col-6 mx-auto">
       <a href="alta.html" class="btn btn-primary btn-lg">Dar de Alta</a>
       <a href="visualizaciones.html" class="btn btn-success btn-lg">Ver Proyectos</a>
@@ -91,3 +18,4 @@
   </div>
 </body>
 </html>
+
