@@ -1,104 +1,258 @@
+/* Fuente pixelada tipo Minecraft */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
 body {
-  background-color: #0A3D0A;  /* Verde muy oscuro */
-  color: #D0F0D0;  /* Verde claro */
+  margin: 0;
+  font-family: 'Press Start 2P', monospace, sans-serif;
+  background-color: #121212; /* negro oscuro */
+  color: #00ff00; /* verde fuerte */
+  min-height: 100vh;
+  position: relative;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  color: #A0E080;  /* Verde claro fuerte */
+/* Fondo concreto muy sutil (puedes cambiar la URL a tu imagen concreta) */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: url('img/concrete-texture.png') repeat;
+  opacity: 0.07;
+  pointer-events: none;
+  z-index: 0;
 }
 
+/* Contenedores principales */
+.container {
+  background: rgba(0,0,0,0.8);
+  border: 3px solid #00ff00;
+  border-radius: 12px;
+  padding: 25px 30px;
+  max-width: 900px;
+  margin: 50px auto;
+  position: relative;
+  box-shadow: 0 0 15px #00ff00cc;
+}
+
+/* Agregar el icono radioactivo en las 4 esquinas */
+.container::before,
+.container::after,
+.container > .corner-top-right,
+.container > .corner-bottom-left {
+  content: "";
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-image: url('img/radioation.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 10;
+}
+.container::before {
+  top: 10px;
+  left: 10px;
+}
+.container::after {
+  top: 10px;
+  right: 10px;
+}
+.container > .corner-top-right {
+  top: calc(100% - 50px);
+  left: 10px;
+}
+.container > .corner-bottom-left {
+  bottom: 10px;
+  right: 10px;
+}
+
+/* Para esos 2 últimos pseudo-elementos que no existen, crear elementos en HTML */
+.corner-top-right, .corner-bottom-left {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background-image: url('img/radioation.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 10;
+}
+.corner-top-right {
+  bottom: 10px;
+  left: 10px;
+}
+.corner-bottom-left {
+  bottom: 10px;
+  right: 10px;
+}
+
+/* Títulos h1, h2 */
+h1, h2 {
+  color: #00ff00;
+  text-shadow: 0 0 8px #00ff00;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+/* Links */
 a {
-  color: #A0E080;
-}
-
-a:hover {
-  color: #C0F0A0;
+  color: #00ff00;
   text-decoration: none;
 }
-
-.btn-primary {
-  background-color: #1E7E1E;  /* Verde fuerte */
-  border-color: #1E7E1E;
-  color: white;
+a:hover {
+  color: #66ff66;
+  text-decoration: underline;
 }
 
-.btn-primary:hover {
-  background-color: #3AB03A;
-  border-color: #3AB03A;
+/* Botones de bootstrap personalizados */
+.btn-primary {
+  background-color: #009900;
+  border-color: #00ff00;
+  color: #000;
+  font-weight: bold;
+  text-shadow: none;
+}
+.btn-primary:hover, .btn-primary:focus {
+  background-color: #00ff00;
+  border-color: #00cc00;
+  color: #000;
+  box-shadow: 0 0 10px #00ff00;
 }
 
 .btn-success {
-  background-color: #2BB32B;  /* Verde vivo */
-  border-color: #2BB32B;
-  color: white;
+  background-color: #007700;
+  border-color: #00ff00;
+  color: #000;
 }
-
 .btn-success:hover {
-  background-color: #48D148;
-  border-color: #48D148;
+  background-color: #00cc00;
+  border-color: #00ff00;
+  color: #000;
 }
 
 .btn-danger {
-  background-color: #B32B2B;  /* Rojo muy suave, para que no haya amarillo ni marrón */
-  border-color: #B32B2B;
-  color: white;
+  background-color: #550000;
+  border-color: #00ff00;
+  color: #fff;
 }
-
 .btn-danger:hover {
-  background-color: #D14848;
-  border-color: #D14848;
+  background-color: #aa0000;
+  border-color: #ff0000;
 }
 
 .btn-warning {
-  background-color: #4CAF50;  /* Verde medio para warning, nada amarillo */
-  border-color: #4CAF50;
-  color: white;
+  background-color: #228822;
+  border-color: #00ff00;
+  color: #000;
 }
-
 .btn-warning:hover {
-  background-color: #66BB6A;
-  border-color: #66BB6A;
+  background-color: #44cc44;
+  border-color: #00ff00;
+  color: #000;
 }
 
 .btn-secondary {
-  background-color: #166916;  /* Verde oscuro */
-  border-color: #166916;
-  color: white;
+  background-color: #003300;
+  border-color: #00ff00;
+  color: #00ff00;
 }
-
 .btn-secondary:hover {
-  background-color: #2B8A2B;
-  border-color: #2B8A2B;
+  background-color: #005500;
+  border-color: #00ff00;
+  color: #aaffaa;
 }
 
-.table {
-  color: #D0F0D0;
-}
-
-.table-striped > tbody > tr:nth-of-type(odd) {
-  background-color: #0C550C;
-}
-
+/* Formularios */
 .form-label {
-  color: #D0F0D0;
+  color: #00ff00;
+  font-weight: 700;
 }
 
 .form-control, .form-select {
-  background-color: #145214;
-  color: #D0F0D0;
-  border: 1px solid #3AB03A;
+  background-color: #002200;
+  border: 2px solid #00ff00;
+  color: #00ff00;
+  font-weight: 600;
 }
-
 .form-control:focus, .form-select:focus {
-  background-color: #3AB03A;
-  color: white;
-  border-color: #A0E080;
-  box-shadow: 0 0 5px #A0E080;
+  background-color: #003300;
+  border-color: #66ff66;
+  box-shadow: 0 0 8px #00ff00aa;
+  color: #ccffcc;
 }
 
-.container {
-  background-color: #0C550C;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 0 15px #0A3D0A;
+/* Tablas */
+.table {
+  background-color: #001100;
+  color: #00ff00;
+  border: 2px solid #00ff00;
+}
+.table thead {
+  background-color: #003300;
+  color: #ccffcc;
+}
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: #002200;
+}
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: #004400;
+}
+
+/* Contenedor menú index */
+.menu-container {
+  max-width: 900px;
+  margin: 60px auto;
+  padding: 25px 30px;
+  border: 4px solid #00ff00;
+  background: rgba(0,0,0,0.8);
+  border-radius: 12px;
+  box-shadow: 0 0 25px #00ff00cc;
+  position: relative;
+}
+
+/* Icono biohazard grande fondo en index */
+.biohazard-bg {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.05;
+  width: 300px;
+  height: 300px;
+  background-image: url('img/biohazard-sing.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Centramos títulos e links en index */
+h1, .nav-buttons {
+  text-align: center;
+}
+
+.nav-buttons {
+  margin-top: 30px;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.nav-buttons a {
+  padding: 12px 25px;
+  border: 3px solid #00ff00;
+  color: #00ff00;
+  font-weight: 700;
+  font-size: 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  user-select: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+.nav-buttons a:hover {
+  background-color: #00ff00;
+  color: #000;
+  box-shadow: 0 0 20px #00ff00;
 }

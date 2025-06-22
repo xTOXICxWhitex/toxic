@@ -1,5 +1,5 @@
 {
-  "name": "xtoxicxdarkx-proyecto",
+  "name": "paec-proyecto",
   "version": "1.0.0",
   "description": "Proyecto PAEC CRUD básico",
   "main": "server.js",
@@ -11,4 +11,3 @@
     "mongoose": "^7.0.3"
   }
 }
-
