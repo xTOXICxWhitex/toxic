@@ -10,7 +10,6 @@
   <div class="container py-5">
     <h2 class="mb-4 text-center">Actualizar un Proyecto</h2>
 
-    <!-- Botón siempre visible -->
     <button type="button" id="btnVolver" class="btn btn-secondary mb-3">Volver al Menú</button>
 
     <div class="mb-3">
@@ -46,6 +45,10 @@
       <div class="mb-3">
         <label for="estatus" class="form-label">Estatus</label>
         <input type="text" class="form-control" id="estatus" required />
+      </div>
+      <div class="mb-3">
+        <label for="kilos" class="form-label">Kilos Reciclados</label>
+        <input type="number" class="form-control" id="kilos" step="0.1" min="0" required />
       </div>
       <button type="submit" class="btn btn-warning">Actualizar Proyecto</button>
     </form>
@@ -102,6 +105,7 @@
             document.getElementById('participantes').value = p.participantes;
             document.getElementById('fecha').value = p.fecha;
             document.getElementById('estatus').value = p.estatus;
+            document.getElementById('kilos').value = p.kilos_reciclados ?? 0;
             formActualizar.style.display = 'block';
             mensaje.innerHTML = '';
           }
@@ -125,6 +129,7 @@
         participantes: parseInt(document.getElementById('participantes').value),
         fecha: document.getElementById('fecha').value,
         estatus: document.getElementById('estatus').value,
+        kilos_reciclados: parseFloat(document.getElementById('kilos').value)
       };
 
       try {

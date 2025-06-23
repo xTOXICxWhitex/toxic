@@ -27,13 +27,41 @@ const proyectoSchema = new mongoose.Schema({
   responsable: String,
   participantes: Number,
   fecha: String,
-  estatus: String
+  estatus: String,
+  kilos_reciclados: Number
 });
 
-// 👇 Aquí usamos el nombre exacto de la colección: "proyecto"
+// 👇 Modelo para la colección 'proyecto'
 const Proyecto = mongoose.model('proyecto', proyectoSchema, 'proyecto');
 
-// Rutas
+// 🔍 Nueva ruta: buscar por valor parcial en título, categoría o responsable
+app.get('/api/buscar', async (req, res) => {
+  try {
+    const valor = req.query.valor;
+    if (!valor) {
+      return res.status(400).json({ message: "Falta el parámetro 'valor'." });
+    }
+
+    const regex = new RegExp(valor, "i"); // i = insensible a mayúsculas/minúsculas
+    const resultados = await Proyecto.find({
+      $or: [
+        { titulo: regex },
+        { categoria: regex },
+        { responsable: regex }
+      ]
+    });
+
+    if (resultados.length === 0) {
+      return res.status(404).json({ message: "No se encontraron coincidencias." });
+    }
+
+    res.json(resultados);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Rutas CRUD existentes
 app.get('/api/proyectos', async (req, res) => {
   try {
     const proyectos = await Proyecto.find();
@@ -79,3 +107,4 @@ app.put('/api/proyectos/:id', async (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
+
