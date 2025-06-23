@@ -31,10 +31,10 @@ const proyectoSchema = new mongoose.Schema({
   kilos_reciclados: Number
 });
 
-// 👇 Modelo para la colección 'proyecto'
+// Modelo para la colección 'proyecto'
 const Proyecto = mongoose.model('proyecto', proyectoSchema, 'proyecto');
 
-// 🔍 Nueva ruta: buscar por valor parcial en título, categoría o responsable
+// Ruta buscar por título, categoría o responsable
 app.get('/api/buscar', async (req, res) => {
   try {
     const valor = req.query.valor;
@@ -42,7 +42,7 @@ app.get('/api/buscar', async (req, res) => {
       return res.status(400).json({ message: "Falta el parámetro 'valor'." });
     }
 
-    const regex = new RegExp(valor, "i"); // i = insensible a mayúsculas/minúsculas
+    const regex = new RegExp(valor, "i");
     const resultados = await Proyecto.find({
       $or: [
         { titulo: regex },
@@ -61,7 +61,7 @@ app.get('/api/buscar', async (req, res) => {
   }
 });
 
-// Rutas CRUD existentes
+// Rutas CRUD
 app.get('/api/proyectos', async (req, res) => {
   try {
     const proyectos = await Proyecto.find();
@@ -103,8 +103,7 @@ app.put('/api/proyectos/:id', async (req, res) => {
   }
 });
 
-// Inicio del servidor
+// Inicio servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
-
