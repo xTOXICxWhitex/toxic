@@ -50,6 +50,18 @@
         <label for="kilos" class="form-label">Kilos Reciclados</label>
         <input type="number" class="form-control" id="kilos" step="0.1" min="0" required />
       </div>
+      <div class="mb-3">
+        <label for="lugar" class="form-label">Lugar de Recolección</label>
+        <input type="text" class="form-control" id="lugar" />
+      </div>
+      <div class="mb-3">
+        <label for="fecha_entrega" class="form-label">Fecha de Entrega</label>
+        <input type="date" class="form-control" id="fecha_entrega" />
+      </div>
+      <div class="mb-3">
+        <label for="horario" class="form-label">Horario</label>
+        <input type="text" class="form-control" id="horario" />
+      </div>
       <button type="submit" class="btn btn-warning">Actualizar Proyecto</button>
     </form>
 
@@ -106,6 +118,9 @@
             document.getElementById('fecha').value = p.fecha;
             document.getElementById('estatus').value = p.estatus;
             document.getElementById('kilos').value = p.kilos_reciclados ?? 0;
+            document.getElementById('lugar').value = p.lugar_recoleccion || '';
+            document.getElementById('fecha_entrega').value = p.fecha_entrega || '';
+            document.getElementById('horario').value = p.horario || '';
             formActualizar.style.display = 'block';
             mensaje.innerHTML = '';
           }
@@ -129,7 +144,10 @@
         participantes: parseInt(document.getElementById('participantes').value),
         fecha: document.getElementById('fecha').value,
         estatus: document.getElementById('estatus').value,
-        kilos_reciclados: parseFloat(document.getElementById('kilos').value)
+        kilos_reciclados: parseFloat(document.getElementById('kilos').value),
+        lugar_recoleccion: document.getElementById('lugar').value,
+        fecha_entrega: document.getElementById('fecha_entrega').value,
+        horario: document.getElementById('horario').value
       };
 
       try {
@@ -158,4 +176,5 @@
   </script>
 </body>
 </html>
+
 

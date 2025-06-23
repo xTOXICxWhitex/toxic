@@ -19,7 +19,7 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('✅ Conectado a MongoDB Atlas'))
 .catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
-// Esquema
+// Esquema extendido
 const proyectoSchema = new mongoose.Schema({
   titulo: String,
   categoria: String,
@@ -28,7 +28,10 @@ const proyectoSchema = new mongoose.Schema({
   participantes: Number,
   fecha: String,
   estatus: String,
-  kilos_reciclados: Number
+  kilos_reciclados: Number,
+  lugar_recoleccion: String,    // Nuevo campo
+  fecha_entrega: String,        // Nuevo campo
+  horario: String               // Nuevo campo
 });
 
 // Modelo para la colección 'proyecto'
@@ -64,7 +67,20 @@ app.get('/api/buscar', async (req, res) => {
 // Rutas CRUD
 app.get('/api/proyectos', async (req, res) => {
   try {
-    const proyectos = await Proyecto.find();
+    let proyectos = await Proyecto.find();
+
+    // Ajustamos los campos para mensajes en caso de 0
+    proyectos = proyectos.map(p => {
+      return {
+        ...p.toObject(),
+        kilos_reciclados: p.kilos_reciclados === 0 ? "No se recolectó" : p.kilos_reciclados,
+        participantes: p.participantes === 0 ? "No fue necesaria la participación" : p.participantes,
+        lugar_recoleccion: p.lugar_recoleccion || "No especificado",
+        fecha_entrega: p.fecha_entrega || "No especificada",
+        horario: p.horario || "No especificado"
+      };
+    });
+
     res.json(proyectos);
   } catch (err) {
     res.status(500).json({ message: err.message });

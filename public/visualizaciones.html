@@ -3,13 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <title>Visualizar Proyectos</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="container py-5">
     <h2 class="mb-4 text-center">Visualizar Proyectos</h2>
     <div class="table-responsive">
-      <table class="table table-striped" id="tablaProyectos">
+      <table class="table table-striped table-bordered" id="tablaProyectos">
         <thead>
           <tr>
             <th>ID</th>
@@ -21,6 +22,9 @@
             <th>Fecha</th>
             <th>Estatus</th>
             <th>Kilos Reciclados</th>
+            <th>Lugar</th>
+            <th>Fecha Entrega</th>
+            <th>Horario</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -41,10 +45,11 @@
         tabla.innerHTML = '';
 
         proyectos.forEach((p, index) => {
-          // Condición para kilos reciclados
-          let kilosText = 'No se recolectó / No necesario';
+          let kilosText = 'No se recolectó';
           if (p.kilos_reciclados && p.kilos_reciclados > 0) {
-            kilosText = p.kilos_reciclados;
+            kilosText = `${p.kilos_reciclados} kg`;
+          } else if (p.estatus && p.estatus.toLowerCase().includes("no")) {
+            kilosText = 'No era necesario';
           }
 
           const fila = `
@@ -58,6 +63,9 @@
               <td>${p.fecha || ''}</td>
               <td>${p.estatus || ''}</td>
               <td>${kilosText}</td>
+              <td>${p.lugar_recoleccion || 'N/A'}</td>
+              <td>${p.fecha_entrega || 'N/A'}</td>
+              <td>${p.horario || 'N/A'}</td>
             </tr>
           `;
           tabla.innerHTML += fila;
@@ -71,4 +79,3 @@
   </script>
 </body>
 </html>
-
