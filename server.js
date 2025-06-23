@@ -4,12 +4,10 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Conexión con MongoDB Atlas desde variable de entorno
 const mongoURI = process.env.MONGODB_URI;
 
 mongoose.connect(mongoURI, {
@@ -19,8 +17,9 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('✅ Conectado a MongoDB Atlas'))
 .catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
-// Esquema extendido
+// Esquema extendido con campo "id" personalizado
 const proyectoSchema = new mongoose.Schema({
+  id: String, // ID tipo "A01"
   titulo: String,
   categoria: String,
   descripcion: String,
@@ -29,15 +28,24 @@ const proyectoSchema = new mongoose.Schema({
   fecha: String,
   estatus: String,
   kilos_reciclados: Number,
-  lugar_recoleccion: String,    // Nuevo campo
-  fecha_entrega: String,        // Nuevo campo
-  horario: String               // Nuevo campo
+  lugar_recoleccion: String,
+  fecha_entrega: String,
+  horario: String
 });
 
-// Modelo para la colección 'proyecto'
 const Proyecto = mongoose.model('proyecto', proyectoSchema, 'proyecto');
 
-// Ruta buscar por título, categoría o responsable
+// Obtener el siguiente ID tipo "A01", "A02", etc.
+async function generarNuevoID() {
+  const ultimos = await Proyecto.find().sort({ id: -1 }).limit(1);
+  if (ultimos.length === 0) return "A01";
+
+  const ultimoID = ultimos[0].id;
+  const numero = parseInt(ultimoID.substring(1)) + 1;
+  return `A${numero.toString().padStart(2, '0')}`;
+}
+
+// Buscar por título, categoría o responsable
 app.get('/api/buscar', async (req, res) => {
   try {
     const valor = req.query.valor;
@@ -64,22 +72,19 @@ app.get('/api/buscar', async (req, res) => {
   }
 });
 
-// Rutas CRUD
+// Obtener todos los proyectos
 app.get('/api/proyectos', async (req, res) => {
   try {
     let proyectos = await Proyecto.find();
 
-    // Ajustamos los campos para mensajes en caso de 0
-    proyectos = proyectos.map(p => {
-      return {
-        ...p.toObject(),
-        kilos_reciclados: p.kilos_reciclados === 0 ? "No se recolectó" : p.kilos_reciclados,
-        participantes: p.participantes === 0 ? "No fue necesaria la participación" : p.participantes,
-        lugar_recoleccion: p.lugar_recoleccion || "No especificado",
-        fecha_entrega: p.fecha_entrega || "No especificada",
-        horario: p.horario || "No especificado"
-      };
-    });
+    proyectos = proyectos.map(p => ({
+      ...p.toObject(),
+      kilos_reciclados: p.kilos_reciclados === 0 ? "No se recolectó" : p.kilos_reciclados,
+      participantes: p.participantes === 0 ? "No fue necesaria la participación" : p.participantes,
+      lugar_recoleccion: p.lugar_recoleccion || "No especificado",
+      fecha_entrega: p.fecha_entrega || "No especificada",
+      horario: p.horario || "No especificado"
+    }));
 
     res.json(proyectos);
   } catch (err) {
@@ -87,9 +92,11 @@ app.get('/api/proyectos', async (req, res) => {
   }
 });
 
+// Crear un nuevo proyecto con ID automático
 app.post('/api/proyectos', async (req, res) => {
   try {
-    const nuevo = new Proyecto(req.body);
+    const nuevoID = await generarNuevoID();
+    const nuevo = new Proyecto({ ...req.body, id: nuevoID });
     const guardado = await nuevo.save();
     res.status(201).json(guardado);
   } catch (err) {
@@ -97,6 +104,7 @@ app.post('/api/proyectos', async (req, res) => {
   }
 });
 
+// Eliminar proyecto por _id
 app.delete('/api/proyectos/:id', async (req, res) => {
   try {
     const eliminado = await Proyecto.findByIdAndDelete(req.params.id);
@@ -106,6 +114,7 @@ app.delete('/api/proyectos/:id', async (req, res) => {
   }
 });
 
+// Actualizar proyecto por _id
 app.put('/api/proyectos/:id', async (req, res) => {
   try {
     const actualizado = await Proyecto.findByIdAndUpdate(
@@ -119,7 +128,8 @@ app.put('/api/proyectos/:id', async (req, res) => {
   }
 });
 
-// Inicio servidor
+// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });
+
