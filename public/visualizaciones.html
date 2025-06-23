@@ -2,15 +2,33 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Visualizar Proyectos</title>
+  <title>Proyecto PAEC de Corona - Visualizar Proyectos</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Tabla verde oscuro con texto verde claro */
+    #tablaProyectos {
+      background-color: #064e03; /* verde oscuro */
+      color: #a8d5a3; /* verde claro */
+    }
+    #tablaProyectos th, #tablaProyectos td {
+      border-color: #a8d5a3 !important;
+    }
+    #tablaProyectos thead {
+      background-color: #086b05;
+      color: #d1f2a5;
+    }
+    #tablaProyectos tbody tr:hover {
+      background-color: #0b8c07;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <div class="container py-5">
     <h2 class="mb-4 text-center">Visualizar Proyectos</h2>
     <div class="table-responsive">
-      <table class="table table-striped" id="tablaProyectos">
+      <table class="table table-striped table-bordered" id="tablaProyectos">
         <thead>
           <tr>
             <th>ID</th>
@@ -27,9 +45,7 @@
         <tbody></tbody>
       </table>
     </div>
-    <button class="btn btn-secondary mt-3" onclick="window.location.href='index.html'">Volver al Menú</button>
-    <div class="corner-bottom-left"></div>
-    <div class="corner-bottom-right"></div>
+    <button class="btn btn-verde mt-3" onclick="window.location.href='index.html'">Volver al Menú</button>
   </div>
 
   <script>
@@ -44,7 +60,7 @@
         proyectos.forEach((p, index) => {
           const fila = `
             <tr>
-              <td>${index + 1}</td>
+              <td>${p._id}</td>
               <td>${p.titulo || ''}</td>
               <td>${p.categoria || ''}</td>
               <td>${p.descripcion || ''}</td>
