@@ -67,8 +67,8 @@
         tbody.innerHTML = '';
 
         datos.forEach(item => {
-          const p = item.proyecto;
-          const regs = item.registros;
+          const p = item.proyecto || {};
+          const regs = item.registros || [];
 
           if (regs.length === 0) {
             tbody.innerHTML += `
@@ -81,8 +81,7 @@
                 <td>${p.participantes || ''}</td>
                 <td>${p.estatus || ''}</td>
                 <td colspan="5">Sin registros</td>
-              </tr>
-            `;
+              </tr>`;
           } else {
             regs.forEach(r => {
               tbody.innerHTML += `
@@ -99,13 +98,14 @@
                   <td>${r.fecha_entrega || ''}</td>
                   <td>${r.horario || ''}</td>
                   <td>${r.lugar_recoleccion || ''}</td>
-                </tr>
-              `;
+                </tr>`;
             });
           }
         });
+
       } catch (err) {
-        alert("Error al cargar los datos: " + err.message);
+        const tbody = document.getElementById('tabla-contenido');
+        tbody.innerHTML = `<tr><td colspan="12">Error al cargar los datos: ${err.message}</td></tr>`;
       }
     }
 
@@ -113,4 +113,5 @@
   </script>
 </body>
 </html>
+
 
