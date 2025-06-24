@@ -1,4 +1,3 @@
-// Carga las variables de entorno desde el archivo .env
 require('dotenv').config();
 
 const express = require('express');
@@ -10,10 +9,8 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Servir archivos estáticos directamente desde 'public'
+// Servir archivos estáticos desde 'public'
 app.use(express.static(path.join(__dirname, 'public')));
-
-// Ya no necesitas rutas explícitas para HTML si están en public
 
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://xTOXICx:715600toxic@cluster0.hjmfyw4.mongodb.net/PAEC?retryWrites=true&w=majority';
 
@@ -26,7 +23,7 @@ mongoose.connect(mongoURI, {
 
 /* ======= ESQUEMAS ======= */
 
-// Proyecto
+// Proyecto (colección singular)
 const proyectoSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   titulo: { type: String, required: true },
@@ -35,7 +32,7 @@ const proyectoSchema = new mongoose.Schema({
   responsable: String,
   participantes: Number,
   estatus: String
-}, { collection: 'proyectos' });
+}, { collection: 'proyecto' });
 const Proyecto = mongoose.model('Proyecto', proyectoSchema);
 
 // Registro
@@ -167,14 +164,55 @@ app.get('/api/buscar/:id', async (req, res) => {
   }
 });
 
+// Aquí la visualización combinada en lista plana sin fecha
 app.get('/api/visualizartodo', async (req, res) => {
   try {
     const proyectos = await Proyecto.find();
-    const resultado = await Promise.all(proyectos.map(async (proyecto) => {
-      const registros = await Registro.find({ id: proyecto.id });
-      return { proyecto, registros };
-    }));
-    res.json(resultado);
+
+    const combinado = [];
+
+    for (const p of proyectos) {
+      const registros = await Registro.find({ id: p.id });
+
+      if (registros.length === 0) {
+        combinado.push({
+          idProyecto: p.id,
+          titulo: p.titulo,
+          categoria: p.categoria,
+          descripcion: p.descripcion,
+          responsable: p.responsable,
+          participantes: p.participantes,
+          estatus: p.estatus,
+
+          kilos_reciclados: '',
+          lugar: '',
+          fecha_entrega: '',
+          horario: '',
+          lugar_recoleccion: ''
+        });
+      } else {
+        registros.forEach(r => {
+          combinado.push({
+            idProyecto: p.id,
+            titulo: p.titulo,
+            categoria: p.categoria,
+            descripcion: p.descripcion,
+            responsable: p.responsable,
+            participantes: p.participantes,
+            estatus: p.estatus,
+
+            kilos_reciclados: r.kilos_reciclados,
+            lugar: r.lugar,
+            fecha_entrega: r.fecha_entrega,
+            horario: r.horario,
+            lugar_recoleccion: r.lugar_recoleccion
+          });
+        });
+      }
+    }
+
+    res.json(combinado);
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

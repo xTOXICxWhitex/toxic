@@ -5,96 +5,59 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Visualizar Todo - PAEC</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .table-container {
+      overflow-x: auto;
+      max-width: 100%;
+      border: 2px solid #00ff00;
+      background-color: #001100;
+      padding: 10px;
+      border-radius: 8px;
+      margin-top: 20px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 900px;
+      color: #00ff00;
+    }
+    th, td {
+      border: 1px solid #00ff00;
+      padding: 8px 12px;
+      text-align: left;
+      white-space: nowrap;
+    }
+    th {
+      background-color: #003300;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background-color: #002200;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Visualizar Todo - Proyectos y Registros</h1>
 
-    <div id="contenido"></div>
-
-    <a href="index.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Principal</a>
-  </div>
-
-  <script>
-    async function cargarTodo() {
-      const cont = document.getElementById('contenido');
-      cont.innerHTML = '<p>Cargando datos...</p>';
-
-      try {
-        const res = await fetch('/api/visualizartodo');
-        const datos = await res.json();
-
-        if (datos.length === 0) {
-          cont.innerHTML = '<p>No hay proyectos registrados.</p>';
-          return;
-        }
-
-        let html = '';
-
-        datos.forEach(item => {
-          const p = item.proyecto;
-          const regs = item.registros;
-
-          html += `
-            <section style="margin-bottom: 40px; border: 2px solid #00ff00; padding: 15px; border-radius: 10px; background-color: #001100;">
-              <h2>Proyecto: ${p.titulo} (${p.id})</h2>
-              <p><strong>Categoría:</strong> ${p.categoria || 'N/A'}</p>
-              <p><strong>Descripción:</strong> ${p.descripcion || 'N/A'}</p>
-              <p><strong>Responsable:</strong> ${p.responsable || 'N/A'}</p>
-              <p><strong>Participantes:</strong> ${p.participantes || 'N/A'}</p>
-              <p><strong>Estatus:</strong> ${p.estatus || 'N/A'}</p>
-
-              <h3>Registros asociados:</h3>
-          `;
-
-          if (regs.length === 0) {
-            html += '<p>No hay registros asociados.</p>';
-          } else {
-            html += `
-              <div class="table-responsive">
-                <table class="table table-striped">
-                  <thead>
-                    <tr>
-                      <th>Kilos Reciclados</th>
-                      <th>Lugar</th>
-                      <th>Fecha de Entrega</th>
-                      <th>Horario</th>
-                      <th>Lugar de Recolección</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-            `;
-
-            regs.forEach(r => {
-              html += `
-                <tr>
-                  <td>${r.kilos_reciclados || 'N/A'}</td>
-                  <td>${r.lugar || 'N/A'}</td>
-                  <td>${r.fecha_entrega || 'N/A'}</td>
-                  <td>${r.horario || 'N/A'}</td>
-                  <td>${r.lugar_recoleccion || 'N/A'}</td>
-                </tr>
-              `;
-            });
-
-            html += `
-                  </tbody>
-                </table>
-              </div>
-            `;
-          }
-
-          html += '</section>';
-        });
-
-        cont.innerHTML = html;
-
-      } catch (error) {
-        cont.innerHTML = `<p>Error al cargar datos: ${error.message}</p>`;
-      }
-    }
-
-    window.onload = cargarTodo;
-  </script>
-</body>
-</html>
+    <div class="table-container">
+      <table id="tablaDatos">
+        <thead>
+          <tr>
+            <th>ID Proyecto</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Responsable</th>
+            <th>Participantes</th>
+            <th>Estatus</th>
+            <th>Fecha</th>
+            <th>Kilos Reciclados</th>
+            <th>Lugar</th>
+            <th>Fecha de Entrega</th>
+            <th>Horario</th>
+            <th>Lugar de Recolección</th>
+          </tr>
+        </thead>
+        <tbody id="cuerpoTabla">
+         
