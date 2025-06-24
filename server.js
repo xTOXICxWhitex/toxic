@@ -17,118 +17,179 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('✅ Conectado a MongoDB Atlas'))
 .catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
-// Esquema extendido con campo "id" personalizado
+/* ================================
+   ESQUEMAS
+================================= */
+
+// Proyectos (sin fecha ni campos extra)
 const proyectoSchema = new mongoose.Schema({
-  id: String, // ID tipo "A01"
+  id: String,
   titulo: String,
   categoria: String,
   descripcion: String,
   responsable: String,
   participantes: Number,
-  fecha: String,
-  estatus: String,
+  estatus: String
+}, { collection: 'proyectos' });
+
+const Proyecto = mongoose.model('Proyecto', proyectoSchema);
+
+// Registros (datos de seguimiento)
+const registroSchema = new mongoose.Schema({
+  id: String, // debe coincidir con id de proyecto
   kilos_reciclados: Number,
-  lugar_recoleccion: String,
+  lugar: String,
   fecha_entrega: String,
-  horario: String
-});
+  horario: String,
+  lugar_recoleccion: String
+}, { collection: 'registros' });
 
-const Proyecto = mongoose.model('proyecto', proyectoSchema, 'proyecto');
+const Registro = mongoose.model('Registro', registroSchema);
 
-// Obtener el siguiente ID tipo "A01", "A02", etc.
+/* ================================
+   FUNCIONES ÚTILES
+================================= */
+
+// Generar ID automático tipo A01, A02...
 async function generarNuevoID() {
-  const ultimos = await Proyecto.find().sort({ id: -1 }).limit(1);
-  if (ultimos.length === 0) return "A01";
-
-  const ultimoID = ultimos[0].id;
-  const numero = parseInt(ultimoID.substring(1)) + 1;
+  const ultimo = await Proyecto.findOne().sort({ id: -1 });
+  if (!ultimo) return "A01";
+  const numero = parseInt(ultimo.id.substring(1)) + 1;
   return `A${numero.toString().padStart(2, '0')}`;
 }
 
-// Buscar por título, categoría o responsable
-app.get('/api/buscar', async (req, res) => {
-  try {
-    const valor = req.query.valor;
-    if (!valor) {
-      return res.status(400).json({ message: "Falta el parámetro 'valor'." });
-    }
+/* ================================
+   RUTAS API
+================================= */
 
-    const regex = new RegExp(valor, "i");
-    const resultados = await Proyecto.find({
-      $or: [
-        { titulo: regex },
-        { categoria: regex },
-        { responsable: regex }
-      ]
-    });
+// PROYECTOS
 
-    if (resultados.length === 0) {
-      return res.status(404).json({ message: "No se encontraron coincidencias." });
-    }
-
-    res.json(resultados);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Obtener todos los proyectos
 app.get('/api/proyectos', async (req, res) => {
   try {
-    let proyectos = await Proyecto.find();
-
-    proyectos = proyectos.map(p => ({
-      ...p.toObject(),
-      kilos_reciclados: p.kilos_reciclados === 0 ? "No se recolectó" : p.kilos_reciclados,
-      participantes: p.participantes === 0 ? "No fue necesaria la participación" : p.participantes,
-      lugar_recoleccion: p.lugar_recoleccion || "No especificado",
-      fecha_entrega: p.fecha_entrega || "No especificada",
-      horario: p.horario || "No especificado"
-    }));
-
+    const proyectos = await Proyecto.find();
     res.json(proyectos);
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-// Crear un nuevo proyecto con ID automático
 app.post('/api/proyectos', async (req, res) => {
   try {
     const nuevoID = await generarNuevoID();
-    const nuevo = new Proyecto({ ...req.body, id: nuevoID });
-    const guardado = await nuevo.save();
+    const proyecto = new Proyecto({ ...req.body, id: nuevoID });
+    const guardado = await proyecto.save();
     res.status(201).json(guardado);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// Eliminar proyecto por _id
-app.delete('/api/proyectos/:id', async (req, res) => {
-  try {
-    const eliminado = await Proyecto.findByIdAndDelete(req.params.id);
-    res.json(eliminado);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-});
-
-// Actualizar proyecto por _id
 app.put('/api/proyectos/:id', async (req, res) => {
   try {
-    const actualizado = await Proyecto.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      { new: true }
-    );
+    const actualizado = await Proyecto.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(actualizado);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
 });
 
-// Iniciar servidor
+app.delete('/api/proyectos/:id', async (req, res) => {
+  try {
+    const eliminado = await Proyecto.findByIdAndDelete(req.params.id);
+    if (eliminado) {
+      await Registro.deleteMany({ id: eliminado.id });
+    }
+    res.json({ proyectoEliminado: eliminado });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// REGISTROS
+
+app.get('/api/registros', async (req, res) => {
+  try {
+    const registros = await Registro.find();
+    res.json(registros);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.post('/api/registros', async (req, res) => {
+  try {
+    const proyectoExiste = await Proyecto.findOne({ id: req.body.id });
+    if (!proyectoExiste) {
+      return res.status(400).json({ message: "El proyecto con ese ID no existe." });
+    }
+    const registro = new Registro(req.body);
+    const guardado = await registro.save();
+    res.status(201).json(guardado);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+app.put('/api/registros/:id', async (req, res) => {
+  try {
+    const actualizado = await Registro.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(actualizado);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+app.delete('/api/registros/:id', async (req, res) => {
+  try {
+    const eliminado = await Registro.findByIdAndDelete(req.params.id);
+    res.json(eliminado);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ================================
+   CONSULTAS COMBINADAS
+================================= */
+
+// Buscar por ID (proyecto + sus registros)
+app.get('/api/buscar/:id', async (req, res) => {
+  try {
+    const id = req.params.id.toUpperCase();
+    const proyecto = await Proyecto.findOne({ id });
+    const registros = await Registro.find({ id });
+
+    if (!proyecto && registros.length === 0) {
+      return res.status(404).json({ message: 'No se encontró ningún proyecto ni registro con ese ID.' });
+    }
+
+    res.json({ proyecto, registros });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+// Visualizar todo (proyectos + sus registros)
+app.get('/api/visualizartodo', async (req, res) => {
+  try {
+    const proyectos = await Proyecto.find();
+    const resultado = await Promise.all(proyectos.map(async (proyecto) => {
+      const registros = await Registro.find({ id: proyecto.id });
+      return {
+        proyecto,
+        registros
+      };
+    }));
+    res.json(resultado);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
+
+/* ================================
+   INICIAR SERVIDOR
+================================= */
+
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
 });

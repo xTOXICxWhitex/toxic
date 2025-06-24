@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizar Registros</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>☢️ Visualizar Registros</h1>
+
+    <div class="table-responsive">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID Proyecto</th>
+            <th>Kilos Reciclados</th>
+            <th>Lugar</th>
+            <th>Fecha de Entrega</th>
+            <th>Horario</th>
+            <th>Lugar de Recolección</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-registros">
+          <!-- Aquí van los registros -->
+        </tbody>
+      </table>
+    </div>
+
+    <a href="menuregistros.html" class="btn btn-secondary">Regresar</a>
+
+    <div class="corner-bottom-left"></div>
+    <div class="corner-bottom-right"></div>
+  </div>
+
+  <script>
+    async function cargarRegistros() {
+      const res = await fetch('/api/registros');
+      const registros = await res.json();
+      const tbody = document.getElementById('tabla-registros');
+
+      registros.forEach(r => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${r.id}</td>
+          <td>${r.kilos_reciclados}</td>
+          <td>${r.lugar}</td>
+          <td>${r.fecha_entrega}</td>
+          <td>${r.horario}</td>
+          <td>${r.lugar_recoleccion}</td>
+        `;
+        tbody.appendChild(fila);
+      });
+    }
+
+    cargarRegistros();
+  </script>
+</body>
+</html>

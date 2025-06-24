@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baja de Proyectos - PAEC</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Baja de Proyecto</h1>
+
+    <label for="selectID" class="form-label">Selecciona el ID del proyecto a eliminar:</label>
+    <select id="selectID" class="form-select">
+      <option value="">-- Cargando IDs... --</option>
+    </select>
+
+    <button id="btnEliminar" class="btn btn-danger" style="margin-top: 15px;">Eliminar Proyecto</button>
+
+    <div id="mensaje" style="margin-top: 20px;"></div>
+
+    <a href="menuproyectos.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Proyectos</a>
+  </div>
+
+  <script>
+    const selectID = document.getElementById('selectID');
+    const btnEliminar = document.getElementById('btnEliminar');
+    const mensajeDiv = document.getElementById('mensaje');
+
+    // Cargar IDs al cargar la página
+    async function cargarIDs() {
+      try {
+        const res = await fetch('/api/proyectos');
+        const proyectos = await res.json();
+
+        selectID.innerHTML = '<option value="">-- Selecciona un ID --</option>';
+
+        proyectos.forEach(p => {
+          const option = document.createElement('option');
+          option.value = p._id;  // Usamos _id para eliminar
+          option.textContent = `${p.id} - ${p.titulo}`;
+          selectID.appendChild(option);
+        });
+      } catch (error) {
+        mensajeDiv.style.color = 'red';
+        mensajeDiv.textContent = 'Error al cargar IDs: ' + error.message;
+      }
+    }
+
+    btnEliminar.addEventListener('click', async () => {
+      const idMongo = selectID.value;
+      if (!idMongo) {
+        alert('Por favor selecciona un proyecto.');
+        return;
+      }
+
+      if (!confirm('¿Estás seguro que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/proyectos/${idMongo}`, {
+          method: 'DELETE'
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Error al eliminar proyecto');
+        }
+
+        mensajeDiv.style.color = 'limegreen';
+        mensajeDiv.textContent = 'Proyecto eliminado correctamente.';
+
+        // Recargar IDs para actualizar la lista
+        cargarIDs();
+      } catch (error) {
+        mensajeDiv.style.color = 'red';
+        mensajeDiv.textContent = 'Error al eliminar proyecto: ' + error.message;
+      }
+    });
+
+    window.onload = cargarIDs;
+  </script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Actualizar Proyecto</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>☢️ Actualizar Proyecto</h1>
+    <select id="proyecto-select" class="form-select mb-4">
+      <option selected disabled>Selecciona un proyecto</option>
+    </select>
+
+    <form id="form-actualizar" style="display:none;">
+      <div class="mb-3">
+        <label class="form-label">Título</label>
+        <input type="text" class="form-control" name="titulo" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Categoría</label>
+        <input type="text" class="form-control" name="categoria" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-control" name="descripcion" required></textarea>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Responsable</label>
+        <input type="text" class="form-control" name="responsable" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Participantes</label>
+        <input type="number" class="form-control" name="participantes" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Estatus</label>
+        <select class="form-select" name="estatus" required>
+          <option value="En proceso">En proceso</option>
+          <option value="Finalizado">Finalizado</option>
+          <option value="Cancelado">Cancelado</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-warning">Actualizar</button>
+      <a href="menuproyectos.html" class="btn btn-secondary">Regresar</a>
+    </form>
+
+    <div class="corner-bottom-left"></div>
+    <div class="corner-bottom-right"></div>
+  </div>
+
+  <script>
+    const select = document.getElementById('proyecto-select');
+    const form = document.getElementById('form-actualizar');
+    let proyectos = [];
+
+    async function cargarProyectos() {
+      const res = await fetch('/api/proyectos');
+      proyectos = await res.json();
+      proyectos.forEach(p => {
+        const option = document.createElement('option');
+        option.value = p._id;
+        option.textContent = `${p.id} - ${p.titulo}`;
+        select.appendChild(option);
+      });
+    }
+
+    select.addEventListener('change', () => {
+      const proyecto = proyectos.find(p => p._id === select.value);
+      if (proyecto) {
+        form.style.display = 'block';
+        for (const campo in proyecto) {
+          if (form.elements[campo]) {
+            form.elements[campo].value = proyecto[campo];
+          }
+        }
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+      const res = await fetch(`/api/proyectos/${select.value}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      if (res.ok) {
+        alert('✅ Proyecto actualizado');
+        location.reload();
+      } else {
+        alert('❌ Error al actualizar');
+      }
+    });
+
+    cargarProyectos();
+  </script>
+</body>
+</html>

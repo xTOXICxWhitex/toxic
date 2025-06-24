@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Baja de Registros</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>☢️ Eliminar Registro</h1>
+
+    <select id="registro-select" class="form-select mb-4">
+      <option selected disabled>Selecciona un registro</option>
+    </select>
+
+    <button class="btn btn-danger" id="btn-eliminar">Eliminar</button>
+    <a href="menuregistros.html" class="btn btn-secondary">Regresar</a>
+
+    <div class="corner-bottom-left"></div>
+    <div class="corner-bottom-right"></div>
+  </div>
+
+  <script>
+    let registros = [];
+
+    async function cargarRegistros() {
+      const res = await fetch('/api/registros');
+      registros = await res.json();
+      const select = document.getElementById('registro-select');
+
+      registros.forEach(r => {
+        const option = document.createElement('option');
+        option.value = r._id;
+        option.textContent = `${r.id} - ${r.lugar} (${r.fecha_entrega})`;
+        select.appendChild(option);
+      });
+    }
+
+    document.getElementById('btn-eliminar').addEventListener('click', async () => {
+      const idSeleccionado = document.getElementById('registro-select').value;
+      if (!idSeleccionado) return alert('Selecciona un registro');
+
+      if (confirm('¿Estás seguro de eliminar este registro?')) {
+        const res = await fetch(`/api/registros/${idSeleccionado}`, {
+          method: 'DELETE'
+        });
+
+        if (res.ok) {
+          alert('✅ Registro eliminado');
+          location.reload();
+        } else {
+          alert('❌ Error al eliminar');
+        }
+      }
+    });
+
+    cargarRegistros();
+  </script>
+</body>
+</html>

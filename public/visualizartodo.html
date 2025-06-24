@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Visualizar Todo - PAEC</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Visualizar Todo - Proyectos y Registros</h1>
+
+    <div id="contenido"></div>
+
+    <a href="index.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Principal</a>
+  </div>
+
+  <script>
+    async function cargarTodo() {
+      const cont = document.getElementById('contenido');
+      cont.innerHTML = '<p>Cargando datos...</p>';
+
+      try {
+        const res = await fetch('/api/visualizartodo');
+        const datos = await res.json();
+
+        if (datos.length === 0) {
+          cont.innerHTML = '<p>No hay proyectos registrados.</p>';
+          return;
+        }
+
+        let html = '';
+
+        datos.forEach(item => {
+          const p = item.proyecto;
+          const regs = item.registros;
+
+          html += `
+            <section style="margin-bottom: 40px; border: 2px solid #00ff00; padding: 15px; border-radius: 10px; background-color: #001100;">
+              <h2>Proyecto: ${p.titulo} (${p.id})</h2>
+              <p><strong>Categoría:</strong> ${p.categoria || 'N/A'}</p>
+              <p><strong>Descripción:</strong> ${p.descripcion || 'N/A'}</p>
+              <p><strong>Responsable:</strong> ${p.responsable || 'N/A'}</p>
+              <p><strong>Participantes:</strong> ${p.participantes || 'N/A'}</p>
+              <p><strong>Estatus:</strong> ${p.estatus || 'N/A'}</p>
+              <p><strong>Fecha:</strong> ${p.fecha || 'N/A'}</p>
+
+              <h3>Registros asociados:</h3>
+          `;
+
+          if (regs.length === 0) {
+            html += '<p>No hay registros asociados.</p>';
+          } else {
+            html += `
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>Kilos Reciclados</th>
+                      <th>Lugar</th>
+                      <th>Fecha de Entrega</th>
+                      <th>Horario</th>
+                      <th>Lugar de Recolección</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+            `;
+
+            regs.forEach(r => {
+              html += `
+                <tr>
+                  <td>${r.kilos_reciclados || 'N/A'}</td>
+                  <td>${r.lugar || 'N/A'}</td>
+                  <td>${r.fecha_entrega || 'N/A'}</td>
+                  <td>${r.horario || 'N/A'}</td>
+                  <td>${r.lugar_recoleccion || 'N/A'}</td>
+                </tr>
+              `;
+            });
+
+            html += `
+                  </tbody>
+                </table>
+              </div>
+            `;
+          }
+
+          html += '</section>';
+        });
+
+        cont.innerHTML = html;
+
+      } catch (error) {
+        cont.innerHTML = `<p>Error al cargar datos: ${error.message}</p>`;
+      }
+    }
+
+    window.onload = cargarTodo;
+  </script>
+</body>
+</html>

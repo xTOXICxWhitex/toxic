@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Actualizar Registro</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>☢️ Actualizar Registro</h1>
+
+    <select id="registro-select" class="form-select mb-4">
+      <option selected disabled>Selecciona un registro</option>
+    </select>
+
+    <form id="form-actualizar" style="display: none;">
+      <div class="mb-3">
+        <label class="form-label">ID del Proyecto</label>
+        <input type="text" class="form-control" name="id" readonly />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Kilos Reciclados</label>
+        <input type="number" class="form-control" name="kilos_reciclados" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Lugar</label>
+        <input type="text" class="form-control" name="lugar" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Fecha de Entrega</label>
+        <input type="date" class="form-control" name="fecha_entrega" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Horario</label>
+        <input type="text" class="form-control" name="horario" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Lugar de Recolección</label>
+        <input type="text" class="form-control" name="lugar_recoleccion" required />
+      </div>
+
+      <button type="submit" class="btn btn-warning">Guardar Cambios</button>
+      <a href="menuregistros.html" class="btn btn-secondary">Regresar</a>
+    </form>
+
+    <div class="corner-bottom-left"></div>
+    <div class="corner-bottom-right"></div>
+  </div>
+
+  <script>
+    const select = document.getElementById('registro-select');
+    const form = document.getElementById('form-actualizar');
+    const inputs = form.querySelectorAll('input');
+    let registros = [];
+
+    async function cargarRegistros() {
+      const res = await fetch('/api/registros');
+      registros = await res.json();
+      registros.forEach(r => {
+        const option = document.createElement('option');
+        option.value = r._id;
+        option.textContent = `${r.id} - ${r.lugar}`;
+        select.appendChild(option);
+      });
+    }
+
+    select.addEventListener('change', () => {
+      const registro = registros.find(r => r._id === select.value);
+      if (!registro) return;
+
+      inputs.forEach(input => {
+        input.value = registro[input.name] || '';
+      });
+
+      form.style.display = 'block';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = select.value;
+      const data = Object.fromEntries(new FormData(form));
+
+      const res = await fetch(`/api/registros/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        alert('✅ Registro actualizado');
+        location.reload();
+      } else {
+        const err = await res.json();
+        alert(`❌ Error: ${err.message}`);
+      }
+    });
+
+    cargarRegistros();
+  </script>
+</body>
+</html>

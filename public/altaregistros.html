@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Alta de Registros</title>
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>☢️ Alta de Registros</h1>
+    <form id="form-registro">
+      <div class="mb-3">
+        <label class="form-label">ID del Proyecto</label>
+        <input type="text" class="form-control" name="id" placeholder="Ej: A01" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Kilos Reciclados</label>
+        <input type="number" class="form-control" name="kilos_reciclados" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Lugar</label>
+        <input type="text" class="form-control" name="lugar" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Fecha de Entrega</label>
+        <input type="date" class="form-control" name="fecha_entrega" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Horario</label>
+        <input type="text" class="form-control" name="horario" placeholder="Ej: 10:00 - 11:30 AM" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Lugar de Recolección</label>
+        <input type="text" class="form-control" name="lugar_recoleccion" required />
+      </div>
+      <button type="submit" class="btn btn-success">Guardar Registro</button>
+      <a href="menuregistros.html" class="btn btn-secondary">Regresar</a>
+    </form>
+
+    <div class="corner-bottom-left"></div>
+    <div class="corner-bottom-right"></div>
+  </div>
+
+  <script>
+    const form = document.getElementById('form-registro');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+
+      const res = await fetch('/api/registros', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      if (res.ok) {
+        alert('✅ Registro guardado');
+        form.reset();
+      } else {
+        const error = await res.json();
+        alert(`❌ Error: ${error.message}`);
+      }
+    });
+  </script>
+</body>
+</html>
