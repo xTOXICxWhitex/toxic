@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <title>Visualizar Proyectos</title>
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .container { padding-bottom: 60px; }
+    .actions { margin-top: 25px; }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -11,46 +15,31 @@
     <div class="table-responsive">
       <table class="table table-striped">
         <thead>
-          <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Categoría</th>
-            <th>Descripción</th>
-            <th>Responsable</th>
-            <th>Participantes</th>
-            <th>Estatus</th>
-          </tr>
+          <tr><th>ID</th><th>Título</th><th>Categoría</th><th>Descripción</th><th>Responsable</th><th>Participantes</th><th>Estatus</th></tr>
         </thead>
         <tbody id="tabla-proyectos"></tbody>
       </table>
     </div>
-    <a href="menuproyectos.html" class="btn btn-secondary">Regresar</a>
+    <div class="actions">
+      <a href="index.html" class="btn btn-secondary">Volver al Menú Principal</a>
+    </div>
     <div class="corner-bottom-left"></div>
     <div class="corner-bottom-right"></div>
   </div>
 
   <script>
     async function cargarProyectos() {
+      const tabla = document.getElementById('tabla-proyectos');
       const res = await fetch('/api/proyectos');
       const proyectos = await res.json();
-      const tabla = document.getElementById('tabla-proyectos');
-
       proyectos.forEach(p => {
-        const fila = document.createElement('tr');
-        fila.innerHTML = `
-          <td>${p.id}</td>
-          <td>${p.titulo}</td>
-          <td>${p.categoria}</td>
-          <td>${p.descripcion}</td>
-          <td>${p.responsable}</td>
-          <td>${p.participantes}</td>
-          <td>${p.estatus}</td>
-        `;
-        tabla.appendChild(fila);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${p.id}</td><td>${p.titulo}</td><td>${p.categoria}</td>
+        <td>${p.descripcion}</td><td>${p.responsable}</td><td>${p.participantes}</td><td>${p.estatus}</td>`;
+        tabla.appendChild(tr);
       });
     }
-
-    cargarProyectos();
+    window.onload = cargarProyectos;
   </script>
 </body>
 </html>

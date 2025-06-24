@@ -1,48 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <title>Actualizar Proyecto</title>
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .container { padding-bottom: 60px; }
+    form > * + * { margin-top: 15px; }
+    .actions { display: flex; justify-content: space-between; margin-top: 25px; flex-wrap: wrap; gap: 10px;}
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>☢️ Actualizar Proyecto</h1>
-    <select id="proyecto-select" class="form-select mb-4">
-      <option selected disabled>Selecciona un proyecto</option>
-    </select>
+    <select id="proyecto-select" class="form-select mb-4"><option selected disabled>Selecciona un proyecto</option></select>
 
     <form id="form-actualizar" style="display:none;">
-      <div class="mb-3">
-        <label class="form-label">Título</label>
-        <input type="text" class="form-control" name="titulo" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Categoría</label>
-        <input type="text" class="form-control" name="categoria" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-control" name="descripcion" required></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Responsable</label>
-        <input type="text" class="form-control" name="responsable" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Participantes</label>
-        <input type="number" class="form-control" name="participantes" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Estatus</label>
+      <div class="mb-3"><label class="form-label">Título</label><input type="text" class="form-control" name="titulo" required /></div>
+      <div class="mb-3"><label class="form-label">Categoría</label><input type="text" class="form-control" name="categoria" required /></div>
+      <div class="mb-3"><label class="form-label">Descripción</label><textarea class="form-control" name="descripcion" required></textarea></div>
+      <div class="mb-3"><label class="form-label">Responsable</label><input type="text" class="form-control" name="responsable" required /></div>
+      <div class="mb-3"><label class="form-label">Participantes</label><input type="number" class="form-control" name="participantes" required /></div>
+      <div class="mb-3"><label class="form-label">Estatus</label>
         <select class="form-select" name="estatus" required>
           <option value="En proceso">En proceso</option>
           <option value="Finalizado">Finalizado</option>
           <option value="Cancelado">Cancelado</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-warning">Actualizar</button>
-      <a href="menuproyectos.html" class="btn btn-secondary">Regresar</a>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-warning">Actualizar</button>
+        <a href="index.html" class="btn btn-secondary">Volver al Menú Principal</a>
+      </div>
     </form>
 
     <div class="corner-bottom-left"></div>
@@ -58,26 +48,23 @@
       const res = await fetch('/api/proyectos');
       proyectos = await res.json();
       proyectos.forEach(p => {
-        const option = document.createElement('option');
-        option.value = p._id;
-        option.textContent = `${p.id} - ${p.titulo}`;
-        select.appendChild(option);
+        const o = document.createElement('option');
+        o.value = p._id;
+        o.textContent = `${p.id} - ${p.titulo}`;
+        select.appendChild(o);
       });
     }
 
     select.addEventListener('change', () => {
-      const proyecto = proyectos.find(p => p._id === select.value);
-      if (proyecto) {
-        form.style.display = 'block';
-        for (const campo in proyecto) {
-          if (form.elements[campo]) {
-            form.elements[campo].value = proyecto[campo];
-          }
-        }
-      }
+      form.reset();
+      const p = proyectos.find(x => x._id === select.value);
+      if (!p) return;
+      form.style.display = 'block';
+      ['titulo','categoria','descripcion','responsable','participantes','estatus']
+        .forEach(f => form.elements[f].value = p[f]);
     });
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form));
       const res = await fetch(`/api/proyectos/${select.value}`, {
@@ -85,15 +72,11 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      if (res.ok) {
-        alert('✅ Proyecto actualizado');
-        location.reload();
-      } else {
-        alert('❌ Error al actualizar');
-      }
+      alert(res.ok ? '✅ Actualizado' : '❌ Error al actualizar');
+      if (res.ok) window.location.reload();
     });
 
-    cargarProyectos();
+    window.onload = cargarProyectos;
   </script>
 </body>
 </html>

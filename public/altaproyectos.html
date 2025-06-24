@@ -3,42 +3,42 @@
 <head>
   <meta charset="UTF-8" />
   <title>Alta de Proyectos</title>
-  <link rel="stylesheet" href="../styles.css" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .container {
+      padding-bottom: 60px;
+    }
+    form > * + * {
+      margin-top: 15px;
+    }
+    .actions {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 25px;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>☢️ Alta de Proyectos</h1>
     <form id="form-alta">
-      <div class="mb-3">
-        <label class="form-label">Título</label>
-        <input type="text" class="form-control" name="titulo" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Categoría</label>
-        <input type="text" class="form-control" name="categoria" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Descripción</label>
-        <textarea class="form-control" name="descripcion" required></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Responsable</label>
-        <input type="text" class="form-control" name="responsable" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Participantes</label>
-        <input type="number" class="form-control" name="participantes" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Estatus</label>
+      <div class="mb-3"><label class="form-label">Título</label><input type="text" class="form-control" name="titulo" required /></div>
+      <div class="mb-3"><label class="form-label">Categoría</label><input type="text" class="form-control" name="categoria" required /></div>
+      <div class="mb-3"><label class="form-label">Descripción</label><textarea class="form-control" name="descripcion" required></textarea></div>
+      <div class="mb-3"><label class="form-label">Responsable</label><input type="text" class="form-control" name="responsable" required /></div>
+      <div class="mb-3"><label class="form-label">Participantes</label><input type="number" class="form-control" name="participantes" required /></div>
+      <div class="mb-3"><label class="form-label">Estatus</label>
         <select class="form-select" name="estatus" required>
           <option value="En proceso">En proceso</option>
           <option value="Finalizado">Finalizado</option>
           <option value="Cancelado">Cancelado</option>
         </select>
       </div>
-      <button type="submit" class="btn btn-success">Guardar Proyecto</button>
-      <a href="menuproyectos.html" class="btn btn-secondary">Regresar</a>
+
+      <div class="actions">
+        <button type="submit" class="btn btn-success">Guardar Proyecto</button>
+        <a href="index.html" class="btn btn-secondary">Volver al Menú Principal</a>
+      </div>
     </form>
     <div class="corner-bottom-left"></div>
     <div class="corner-bottom-right"></div>
@@ -54,12 +54,8 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      if (res.ok) {
-        alert('✅ Proyecto guardado');
-        form.reset();
-      } else {
-        alert('❌ Error al guardar');
-      }
+      alert(res.ok ? '✅ Proyecto guardado' : '❌ Error al guardar');
+      if (res.ok) form.reset();
     });
   </script>
 </body>
