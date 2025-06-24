@@ -5,35 +5,78 @@
   <title>Visualizar Todo - PAEC</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
+    body {
+      background-color: #000a00;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 980px;
+      margin: 40px auto;
+      padding: 30px 25px;
+      background-color: #001a00;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 18px #00ff00aa;
+    }
+    h1 {
+      text-align: center;
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
     .scroll-table {
       overflow-x: auto;
-      max-width: 100%;
+      border: 1.5px solid #00ff00;
+      border-radius: 10px;
+      box-shadow: inset 0 0 10px #00ff0044;
     }
     table {
-      border-collapse: collapse;
       width: 100%;
-      min-width: 800px;
+      border-collapse: collapse;
+      min-width: 900px;
+    }
+    thead {
+      background-color: #003300;
     }
     th, td {
       border: 1px solid #00ff00;
-      padding: 8px;
+      padding: 12px 15px;
       text-align: left;
+      font-size: 1rem;
+      vertical-align: middle;
     }
-    th {
-      background-color: #003300;
-      color: #00ff00;
+    tbody tr:nth-child(even) {
+      background-color: #002200;
     }
-    td {
-      background-color: #001100;
-      color: white;
+    a.btn-secondary {
+      display: inline-block;
+      margin-top: 30px;
+      padding: 12px 28px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      background-color: #004400;
+      color: #aaffaa;
+      text-decoration: none;
+      border: 1.5px solid #00ff00;
+      box-shadow: 0 0 8px #00ff00aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    a.btn-secondary:hover {
+      background-color: #006600;
+      color: #d0ffd0;
+      border-color: #99ff99;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Visualizar Todo - Proyectos y Registros</h1>
-
-    <div class="scroll-table" style="margin-top: 25px;">
+    <h1>☢️ Visualizar Todo - Proyectos y Registros</h1>
+    <div class="scroll-table" aria-label="Tabla de proyectos y registros">
       <table>
         <thead>
           <tr>
@@ -55,7 +98,7 @@
       </table>
     </div>
 
-    <a href="index.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Principal</a>
+    <a href="menuproyectos.html" class="btn btn-secondary" aria-label="Volver al menú de proyectos">Volver a Menú Proyectos</a>
   </div>
 
   <script>
@@ -65,10 +108,11 @@
 
       try {
         const res = await fetch('/api/visualizartodo');
+        if (!res.ok) throw new Error('Error al obtener datos');
         const datos = await res.json();
 
         if (!Array.isArray(datos) || datos.length === 0) {
-          cont.innerHTML = '<tr><td colspan="12">No hay datos para mostrar.</td></tr>';
+          cont.innerHTML = '<tr><td colspan="12" style="text-align:center; padding: 20px;">No hay datos para mostrar.</td></tr>';
           return;
         }
 
@@ -92,7 +136,7 @@
         });
 
       } catch (error) {
-        cont.innerHTML = `<tr><td colspan="12">Error al cargar los datos: ${error.message}</td></tr>`;
+        cont.innerHTML = `<tr><td colspan="12" style="color: #ff4444;">Error al cargar los datos: ${error.message}</td></tr>`;
       }
     }
 

@@ -4,41 +4,116 @@
   <meta charset="UTF-8" />
   <title>Alta de Registros</title>
   <link rel="stylesheet" href="../styles.css" />
+  <style>
+    body {
+      background-color: #000a00;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 30px 25px;
+      background-color: #001a00;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 18px #00ff00aa;
+    }
+    h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+      font-size: 1.1rem;
+    }
+    input.form-control {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 1.5px solid #00ff00;
+      background-color: #003300;
+      color: #ccffcc;
+      margin-bottom: 20px;
+      outline: none;
+      transition: border-color 0.25s ease;
+    }
+    input.form-control:focus {
+      border-color: #99ff99;
+      background-color: #004400;
+      color: #e0ffe0;
+    }
+    button.btn-success {
+      background-color: #2e7d32;
+      border: none;
+      color: #d0ffd0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 12px 40px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 14px #44bb44aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      margin-right: 12px;
+    }
+    button.btn-success:hover {
+      background-color: #4caf50;
+      color: #002200;
+    }
+    a.btn-secondary {
+      display: inline-block;
+      padding: 12px 36px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      background-color: #004400;
+      color: #aaffaa;
+      text-decoration: none;
+      border: 1.5px solid #00ff00;
+      box-shadow: 0 0 8px #00ff00aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      vertical-align: middle;
+    }
+    a.btn-secondary:hover {
+      background-color: #006600;
+      color: #d0ffd0;
+      border-color: #99ff99;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>☢️ Alta de Registros</h1>
-    <form id="form-registro">
-      <div class="mb-3">
-        <label class="form-label">ID del Proyecto</label>
-        <input type="text" class="form-control" name="id" placeholder="Ej: A01" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Kilos Reciclados</label>
-        <input type="number" class="form-control" name="kilos_reciclados" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Lugar</label>
-        <input type="text" class="form-control" name="lugar" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Fecha de Entrega</label>
-        <input type="date" class="form-control" name="fecha_entrega" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Horario</label>
-        <input type="text" class="form-control" name="horario" placeholder="Ej: 10:00 - 11:30 AM" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Lugar de Recolección</label>
-        <input type="text" class="form-control" name="lugar_recoleccion" required />
-      </div>
-      <button type="submit" class="btn btn-success">Guardar Registro</button>
-      <a href="menuregistros.html" class="btn btn-secondary">Regresar</a>
-    </form>
+    <form id="form-registro" aria-label="Formulario para dar de alta registro">
+      <label for="input-id">ID del Proyecto</label>
+      <input type="text" id="input-id" class="form-control" name="id" placeholder="Ej: A01" required />
 
-    <div class="corner-bottom-left"></div>
-    <div class="corner-bottom-right"></div>
+      <label for="input-kilos">Kilos Reciclados</label>
+      <input type="number" id="input-kilos" class="form-control" name="kilos_reciclados" required />
+
+      <label for="input-lugar">Lugar</label>
+      <input type="text" id="input-lugar" class="form-control" name="lugar" required />
+
+      <label for="input-fecha">Fecha de Entrega</label>
+      <input type="date" id="input-fecha" class="form-control" name="fecha_entrega" required />
+
+      <label for="input-horario">Horario</label>
+      <input type="text" id="input-horario" class="form-control" name="horario" placeholder="Ej: 10:00 - 11:30 AM" required />
+
+      <label for="input-lugar-rec">Lugar de Recolección</label>
+      <input type="text" id="input-lugar-rec" class="form-control" name="lugar_recoleccion" required />
+
+      <button type="submit" class="btn btn-success" aria-label="Guardar nuevo registro">Guardar Registro</button>
+      <a href="menuregistros.html" class="btn btn-secondary" aria-label="Regresar al menú de registros">Regresar</a>
+    </form>
   </div>
 
   <script>
@@ -64,3 +139,4 @@
   </script>
 </body>
 </html>
+

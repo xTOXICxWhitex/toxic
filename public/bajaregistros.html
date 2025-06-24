@@ -4,20 +4,96 @@
   <meta charset="UTF-8" />
   <title>Baja de Registros</title>
   <link rel="stylesheet" href="../styles.css" />
+  <style>
+    body {
+      background-color: #000a00;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0; padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 30px 25px;
+      background-color: #001a00;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 18px #00ff00aa;
+      text-align: center;
+    }
+    h1 {
+      font-weight: 700;
+      font-size: 2rem;
+      margin-bottom: 30px;
+    }
+    select.form-select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: 1.5px solid #00ff00;
+      background-color: #003300;
+      color: #ccffcc;
+      margin-bottom: 30px;
+      outline: none;
+      transition: border-color 0.25s ease;
+    }
+    select.form-select:focus {
+      border-color: #99ff99;
+      background-color: #004400;
+      color: #e0ffe0;
+    }
+    button.btn-danger {
+      background-color: #b30000;
+      border: none;
+      color: #ffd0d0;
+      font-size: 1.15rem;
+      font-weight: 700;
+      padding: 14px 48px;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff3333aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      margin-bottom: 20px;
+    }
+    button.btn-danger:hover {
+      background-color: #ff4444;
+      color: #330000;
+    }
+    a.btn-secondary {
+      display: inline-block;
+      padding: 12px 36px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 10px;
+      background-color: #004400;
+      color: #aaffaa;
+      text-decoration: none;
+      border: 1.5px solid #00ff00;
+      box-shadow: 0 0 8px #00ff00aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      vertical-align: middle;
+    }
+    a.btn-secondary:hover {
+      background-color: #006600;
+      color: #d0ffd0;
+      border-color: #99ff99;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>☢️ Eliminar Registro</h1>
 
-    <select id="registro-select" class="form-select mb-4">
+    <select id="registro-select" class="form-select" aria-label="Selecciona un registro para eliminar">
       <option selected disabled>Selecciona un registro</option>
     </select>
 
-    <button class="btn btn-danger" id="btn-eliminar">Eliminar</button>
-    <a href="menuregistros.html" class="btn btn-secondary">Regresar</a>
-
-    <div class="corner-bottom-left"></div>
-    <div class="corner-bottom-right"></div>
+    <button class="btn btn-danger" id="btn-eliminar" aria-label="Eliminar registro seleccionado">Eliminar</button>
+    <br />
+    <a href="menuregistros.html" class="btn btn-secondary" aria-label="Regresar al menú de registros">Regresar</a>
   </div>
 
   <script>
