@@ -2,9 +2,32 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Buscador por ID - PAEC</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .scroll-table {
+      overflow-x: auto;
+      max-width: 100%;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 800px;
+    }
+    th, td {
+      border: 1px solid #00ff00;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #003300;
+      color: #00ff00;
+    }
+    td {
+      background-color: #001100;
+      color: white;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -17,13 +40,32 @@
 
     <button id="btnBuscar" class="btn btn-primary" style="margin-top: 15px;">Buscar</button>
 
-    <div id="resultado" style="margin-top: 25px;"></div>
+    <div class="scroll-table" style="margin-top: 25px;">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Responsable</th>
+            <th>Participantes</th>
+            <th>Estatus</th>
+            <th>Kilos Reciclados</th>
+            <th>Lugar</th>
+            <th>Fecha de Entrega</th>
+            <th>Horario</th>
+            <th>Lugar de Recolección</th>
+          </tr>
+        </thead>
+        <tbody id="resultado"></tbody>
+      </table>
+    </div>
 
     <a href="index.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Principal</a>
   </div>
 
   <script>
-    // Función para cargar todos los IDs disponibles (de proyectos)
     async function cargarIDs() {
       try {
         const res = await fetch('/api/proyectos');
@@ -43,12 +85,11 @@
       }
     }
 
-    // Función para buscar por ID y mostrar resultados combinados
     async function buscarID() {
       const select = document.getElementById('selectID');
       const id = select.value;
-      const resultadoDiv = document.getElementById('resultado');
-      resultadoDiv.innerHTML = '';
+      const tbody = document.getElementById('resultado');
+      tbody.innerHTML = '';
 
       if (!id) {
         alert('Por favor selecciona un ID.');
@@ -58,77 +99,58 @@
       try {
         const res = await fetch(`/api/buscar/${id}`);
         if (!res.ok) {
-          if (res.status === 404) {
-            resultadoDiv.innerHTML = `<p>No se encontró información para el ID ${id}.</p>`;
-            return;
-          }
-          throw new Error('Error en la respuesta del servidor');
-        }
-
-        const data = await res.json();
-
-        // Mostrar datos del proyecto
-        const proyecto = data.proyecto;
-        const registros = data.registros;
-
-        if (!proyecto) {
-          resultadoDiv.innerHTML = `<p>No se encontró proyecto para el ID ${id}.</p>`;
+          tbody.innerHTML = `<tr><td colspan="12">No se encontró información para el ID ${id}.</td></tr>`;
           return;
         }
 
-        let html = `
-          <h2>Proyecto: ${proyecto.titulo} (${proyecto.id})</h2>
-          <p><strong>Categoría:</strong> ${proyecto.categoria || 'N/A'}</p>
-          <p><strong>Descripción:</strong> ${proyecto.descripcion || 'N/A'}</p>
-          <p><strong>Responsable:</strong> ${proyecto.responsable || 'N/A'}</p>
-          <p><strong>Participantes:</strong> ${proyecto.participantes || 'N/A'}</p>
-          <p><strong>Estatus:</strong> ${proyecto.estatus || 'N/A'}</p>
-          <h3>Registros asociados:</h3>
-        `;
+        const { proyecto, registros } = await res.json();
 
-        if (registros.length === 0) {
-          html += '<p>No hay registros asociados a este proyecto.</p>';
-        } else {
-          html += `<table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Kilos Reciclados</th>
-                <th>Lugar</th>
-                <th>Fecha de Entrega</th>
-                <th>Horario</th>
-                <th>Lugar de Recolección</th>
-              </tr>
-            </thead>
-            <tbody>
-          `;
-
-          registros.forEach(r => {
-            html += `
-              <tr>
-                <td>${r.kilos_reciclados || 'N/A'}</td>
-                <td>${r.lugar || 'N/A'}</td>
-                <td>${r.fecha_entrega || 'N/A'}</td>
-                <td>${r.horario || 'N/A'}</td>
-                <td>${r.lugar_recoleccion || 'N/A'}</td>
-              </tr>
-            `;
-          });
-
-          html += '</tbody></table>';
+        if (!proyecto) {
+          tbody.innerHTML = `<tr><td colspan="12">No se encontró el proyecto.</td></tr>`;
+          return;
         }
 
-        resultadoDiv.innerHTML = html;
+        if (registros.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td>${proyecto.id}</td>
+              <td>${proyecto.titulo}</td>
+              <td>${proyecto.categoria || ''}</td>
+              <td>${proyecto.descripcion || ''}</td>
+              <td>${proyecto.responsable || ''}</td>
+              <td>${proyecto.participantes || ''}</td>
+              <td>${proyecto.estatus || ''}</td>
+              <td colspan="5">Sin registros</td>
+            </tr>`;
+        } else {
+          registros.forEach(r => {
+            tbody.innerHTML += `
+              <tr>
+                <td>${proyecto.id}</td>
+                <td>${proyecto.titulo}</td>
+                <td>${proyecto.categoria || ''}</td>
+                <td>${proyecto.descripcion || ''}</td>
+                <td>${proyecto.responsable || ''}</td>
+                <td>${proyecto.participantes || ''}</td>
+                <td>${proyecto.estatus || ''}</td>
+                <td>${r.kilos_reciclados || ''}</td>
+                <td>${r.lugar || ''}</td>
+                <td>${r.fecha_entrega || ''}</td>
+                <td>${r.horario || ''}</td>
+                <td>${r.lugar_recoleccion || ''}</td>
+              </tr>`;
+          });
+        }
 
       } catch (error) {
-        resultadoDiv.innerHTML = `<p>Error al buscar: ${error.message}</p>`;
+        tbody.innerHTML = `<tr><td colspan="12">Error al buscar: ${error.message}</td></tr>`;
       }
     }
 
-    // Al cargar la página, cargar IDs
     window.onload = cargarIDs;
-
     document.getElementById('btnBuscar').addEventListener('click', buscarID);
   </script>
 </body>
 </html>
+
 

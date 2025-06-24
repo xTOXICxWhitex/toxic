@@ -2,37 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Visualizar Todo - PAEC</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .table-container {
+    .scroll-table {
       overflow-x: auto;
       max-width: 100%;
-      border: 2px solid #00ff00;
-      background-color: #001100;
-      padding: 10px;
-      border-radius: 8px;
-      margin-top: 20px;
     }
     table {
       border-collapse: collapse;
       width: 100%;
-      min-width: 900px;
-      color: #00ff00;
+      min-width: 800px;
     }
     th, td {
       border: 1px solid #00ff00;
-      padding: 8px 12px;
+      padding: 8px;
       text-align: left;
-      white-space: nowrap;
     }
     th {
       background-color: #003300;
-      font-weight: bold;
+      color: #00ff00;
     }
-    tr:nth-child(even) {
-      background-color: #002200;
+    td {
+      background-color: #001100;
+      color: white;
     }
   </style>
 </head>
@@ -40,18 +33,17 @@
   <div class="container">
     <h1>Visualizar Todo - Proyectos y Registros</h1>
 
-    <div class="table-container">
-      <table id="tablaDatos">
+    <div class="scroll-table">
+      <table>
         <thead>
           <tr>
-            <th>ID Proyecto</th>
+            <th>ID</th>
             <th>Título</th>
             <th>Categoría</th>
             <th>Descripción</th>
             <th>Responsable</th>
             <th>Participantes</th>
             <th>Estatus</th>
-            <th>Fecha</th>
             <th>Kilos Reciclados</th>
             <th>Lugar</th>
             <th>Fecha de Entrega</th>
@@ -59,5 +51,66 @@
             <th>Lugar de Recolección</th>
           </tr>
         </thead>
-        <tbody id="cuerpoTabla">
-         
+        <tbody id="tabla-contenido"></tbody>
+      </table>
+    </div>
+
+    <a href="index.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Principal</a>
+  </div>
+
+  <script>
+    async function cargarTodo() {
+      try {
+        const res = await fetch('/api/visualizartodo');
+        const datos = await res.json();
+        const tbody = document.getElementById('tabla-contenido');
+        tbody.innerHTML = '';
+
+        datos.forEach(item => {
+          const p = item.proyecto;
+          const regs = item.registros;
+
+          if (regs.length === 0) {
+            tbody.innerHTML += `
+              <tr>
+                <td>${p.id}</td>
+                <td>${p.titulo}</td>
+                <td>${p.categoria || ''}</td>
+                <td>${p.descripcion || ''}</td>
+                <td>${p.responsable || ''}</td>
+                <td>${p.participantes || ''}</td>
+                <td>${p.estatus || ''}</td>
+                <td colspan="5">Sin registros</td>
+              </tr>
+            `;
+          } else {
+            regs.forEach(r => {
+              tbody.innerHTML += `
+                <tr>
+                  <td>${p.id}</td>
+                  <td>${p.titulo}</td>
+                  <td>${p.categoria || ''}</td>
+                  <td>${p.descripcion || ''}</td>
+                  <td>${p.responsable || ''}</td>
+                  <td>${p.participantes || ''}</td>
+                  <td>${p.estatus || ''}</td>
+                  <td>${r.kilos_reciclados || ''}</td>
+                  <td>${r.lugar || ''}</td>
+                  <td>${r.fecha_entrega || ''}</td>
+                  <td>${r.horario || ''}</td>
+                  <td>${r.lugar_recoleccion || ''}</td>
+                </tr>
+              `;
+            });
+          }
+        });
+      } catch (err) {
+        alert("Error al cargar los datos: " + err.message);
+      }
+    }
+
+    window.onload = cargarTodo;
+  </script>
+</body>
+</html>
+
