@@ -1,4 +1,5 @@
-require('dotenv').config(); // Para leer variables .env (coloca esto al inicio)
+// Carga las variables de entorno desde el archivo .env
+require('dotenv').config();
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -10,6 +11,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Usar la variable MONGODB_URI del archivo .env, o fallback directo
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://xTOXICx:715600toxic@cluster0.hjmfyw4.mongodb.net/PAEC?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI, {
