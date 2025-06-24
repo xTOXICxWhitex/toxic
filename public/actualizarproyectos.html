@@ -1,82 +1,233 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
+  <meta charset="UTF-8" />
   <title>Actualizar Proyecto</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <link rel="stylesheet" href="../styles.css" />
   <style>
-    .container { padding-bottom: 60px; }
-    form > * + * { margin-top: 15px; }
-    .actions { display: flex; justify-content: space-between; margin-top: 25px; flex-wrap: wrap; gap: 10px;}
+    body {
+      background-color: #000a00;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 30px 25px;
+      background-color: #001a00;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ff00aa;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    #top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 12px;
+    }
+    #proyecto-select {
+      flex-grow: 1;
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1.5px solid #00ff00;
+      background-color: #003300;
+      color: #ccffcc;
+      outline: none;
+      transition: border-color 0.25s ease;
+    }
+    #proyecto-select:focus {
+      border-color: #99ff99;
+      background-color: #004400;
+      color: #e0ffe0;
+    }
+    a.btn-secondary {
+      background-color: #004400;
+      color: #aaffaa;
+      border: 1.5px solid #00ff00;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      box-shadow: 0 0 8px #00ff00aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    a.btn-secondary:hover {
+      background-color: #006600;
+      color: #d0ffd0;
+      border-color: #99ff99;
+    }
+    form {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      display: block;
+      text-align: left;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select[name="estatus"] {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1.5px solid #00ff00;
+      background-color: #003300;
+      color: #ccffcc;
+      outline: none;
+      transition: border-color 0.25s ease;
+      resize: vertical;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select[name="estatus"]:focus {
+      border-color: #99ff99;
+      background-color: #004400;
+      color: #e0ffe0;
+    }
+    button {
+      align-self: center;
+      background-color: #558b2f;
+      border: none;
+      color: #d0ffd0;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 12px 36px;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 0 12px #77cc44aa;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+    button:hover {
+      background-color: #74b816;
+      color: #003300;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>☢️ Actualizar Proyecto</h1>
-    <select id="proyecto-select" class="form-select mb-4"><option selected disabled>Selecciona un proyecto</option></select>
 
-    <form id="form-actualizar" style="display:none;">
-      <div class="mb-3"><label class="form-label">Título</label><input type="text" class="form-control" name="titulo" required /></div>
-      <div class="mb-3"><label class="form-label">Categoría</label><input type="text" class="form-control" name="categoria" required /></div>
-      <div class="mb-3"><label class="form-label">Descripción</label><textarea class="form-control" name="descripcion" required></textarea></div>
-      <div class="mb-3"><label class="form-label">Responsable</label><input type="text" class="form-control" name="responsable" required /></div>
-      <div class="mb-3"><label class="form-label">Participantes</label><input type="number" class="form-control" name="participantes" required /></div>
-      <div class="mb-3"><label class="form-label">Estatus</label>
-        <select class="form-select" name="estatus" required>
+    <div id="top-bar">
+      <select id="proyecto-select" aria-label="Selecciona un proyecto">
+        <option selected disabled>Selecciona un proyecto</option>
+      </select>
+      <a href="menuproyectos.html" class="btn-secondary" title="Regresar al menú de proyectos">Regresar</a>
+    </div>
+
+    <form id="form-actualizar" style="display:none;" aria-live="polite">
+      <div>
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" name="titulo" required />
+      </div>
+      <div>
+        <label for="categoria">Categoría</label>
+        <input type="text" id="categoria" name="categoria" required />
+      </div>
+      <div>
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" name="descripcion" required rows="3"></textarea>
+      </div>
+      <div>
+        <label for="responsable">Responsable</label>
+        <input type="text" id="responsable" name="responsable" required />
+      </div>
+      <div>
+        <label for="participantes">Participantes</label>
+        <input type="number" id="participantes" name="participantes" required min="0" />
+      </div>
+      <div>
+        <label for="estatus">Estatus</label>
+        <select id="estatus" name="estatus" required>
           <option value="En proceso">En proceso</option>
           <option value="Finalizado">Finalizado</option>
           <option value="Cancelado">Cancelado</option>
         </select>
       </div>
-
-      <div class="actions">
-        <button type="submit" class="btn btn-warning">Actualizar</button>
-        <a href="index.html" class="btn btn-secondary">Volver al Menú Principal</a>
-      </div>
+      <button type="submit">Actualizar</button>
     </form>
-
-    <div class="corner-bottom-left"></div>
-    <div class="corner-bottom-right"></div>
   </div>
 
   <script>
     const select = document.getElementById('proyecto-select');
     const form = document.getElementById('form-actualizar');
+
     let proyectos = [];
 
     async function cargarProyectos() {
-      const res = await fetch('/api/proyectos');
-      proyectos = await res.json();
-      proyectos.forEach(p => {
-        const o = document.createElement('option');
-        o.value = p._id;
-        o.textContent = `${p.id} - ${p.titulo}`;
-        select.appendChild(o);
-      });
+      try {
+        const res = await fetch('/api/proyectos');
+        if (!res.ok) throw new Error('Error al cargar proyectos');
+        proyectos = await res.json();
+
+        proyectos.forEach(p => {
+          const option = document.createElement('option');
+          option.value = p._id;
+          option.textContent = `${p.id} - ${p.titulo}`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        alert(error.message);
+      }
     }
 
     select.addEventListener('change', () => {
-      form.reset();
-      const p = proyectos.find(x => x._id === select.value);
-      if (!p) return;
-      form.style.display = 'block';
-      ['titulo','categoria','descripcion','responsable','participantes','estatus']
-        .forEach(f => form.elements[f].value = p[f]);
+      const proyecto = proyectos.find(p => p._id === select.value);
+      if (proyecto) {
+        form.style.display = 'flex';
+
+        // Mapear solo campos que tenemos en el form
+        form.titulo.value = proyecto.titulo || '';
+        form.categoria.value = proyecto.categoria || '';
+        form.descripcion.value = proyecto.descripcion || '';
+        form.responsable.value = proyecto.responsable || '';
+        form.participantes.value = proyecto.participantes || 0;
+        form.estatus.value = proyecto.estatus || 'En proceso';
+      } else {
+        form.style.display = 'none';
+      }
     });
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
       const data = Object.fromEntries(new FormData(form));
-      const res = await fetch(`/api/proyectos/${select.value}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-      alert(res.ok ? '✅ Actualizado' : '❌ Error al actualizar');
-      if (res.ok) window.location.reload();
+      try {
+        const res = await fetch(`/api/proyectos/${select.value}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Error al actualizar');
+        alert('✅ Proyecto actualizado');
+        location.reload();
+      } catch (error) {
+        alert('❌ ' + error.message);
+      }
     });
 
     window.onload = cargarProyectos;
   </script>
 </body>
 </html>
+

@@ -3,41 +3,163 @@
 <head>
   <meta charset="UTF-8" />
   <title>Alta de Proyectos</title>
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="../styles.css" />
   <style>
+    body {
+      background-color: #000a00;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
     .container {
-      padding-bottom: 60px;
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 30px 25px;
+      background-color: #001a00;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ff00aa;
     }
-    form > * + * {
-      margin-top: 15px;
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 1.8rem;
     }
-    .actions {
+    form > div {
+      margin-bottom: 22px;
       display: flex;
-      justify-content: space-between;
-      margin-top: 25px;
+      flex-direction: column;
+    }
+    label {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 1.05rem;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+      background-color: #003300;
+      border: 1.5px solid #00ff00;
+      border-radius: 6px;
+      padding: 10px 14px;
+      color: #ccffcc;
+      font-size: 1rem;
+      font-weight: 500;
+      resize: vertical;
+      transition: border-color 0.25s ease-in-out;
+      min-height: 36px;
+    }
+    textarea {
+      min-height: 80px;
+    }
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #99ff99;
+      outline: none;
+      background-color: #004400;
+      color: #e0ffe0;
+    }
+    button, a.btn {
+      display: inline-block;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      border-radius: 8px;
+      padding: 12px 24px;
+      cursor: pointer;
+      border: none;
+      user-select: none;
+      margin-right: 12px;
+      transition: background-color 0.3s ease;
+      min-width: 140px;
+      text-align: center;
+      box-shadow: 0 0 8px #00ff00aa;
+    }
+    button.btn-success {
+      background-color: #007700;
+      color: #ccffcc;
+    }
+    button.btn-success:hover {
+      background-color: #00cc00;
+      color: #003300;
+    }
+    a.btn-secondary {
+      background-color: #004400;
+      color: #aaffaa;
+      border: 1.5px solid #00ff00;
+      line-height: 1.4;
+    }
+    a.btn-secondary:hover {
+      background-color: #006600;
+      color: #d0ffd0;
+      border-color: #99ff99;
+    }
+    .btn-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+    /* Corners decorativos si quieres mantenerlos */
+    .corner-bottom-left,
+    .corner-bottom-right {
+      position: fixed;
+      bottom: 10px;
+      width: 25px;
+      height: 25px;
+      border: 3px solid #00ff00;
+      border-radius: 6px;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .corner-bottom-left {
+      left: 10px;
+      border-right: none;
+      border-top: none;
+    }
+    .corner-bottom-right {
+      right: 10px;
+      border-left: none;
+      border-top: none;
     }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>☢️ Alta de Proyectos</h1>
-    <form id="form-alta">
-      <div class="mb-3"><label class="form-label">Título</label><input type="text" class="form-control" name="titulo" required /></div>
-      <div class="mb-3"><label class="form-label">Categoría</label><input type="text" class="form-control" name="categoria" required /></div>
-      <div class="mb-3"><label class="form-label">Descripción</label><textarea class="form-control" name="descripcion" required></textarea></div>
-      <div class="mb-3"><label class="form-label">Responsable</label><input type="text" class="form-control" name="responsable" required /></div>
-      <div class="mb-3"><label class="form-label">Participantes</label><input type="number" class="form-control" name="participantes" required /></div>
-      <div class="mb-3"><label class="form-label">Estatus</label>
-        <select class="form-select" name="estatus" required>
+    <form id="form-alta" autocomplete="off">
+      <div>
+        <label for="titulo">Título</label>
+        <input type="text" id="titulo" class="form-control" name="titulo" required />
+      </div>
+      <div>
+        <label for="categoria">Categoría</label>
+        <input type="text" id="categoria" class="form-control" name="categoria" required />
+      </div>
+      <div>
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" class="form-control" name="descripcion" required></textarea>
+      </div>
+      <div>
+        <label for="responsable">Responsable</label>
+        <input type="text" id="responsable" class="form-control" name="responsable" required />
+      </div>
+      <div>
+        <label for="participantes">Participantes</label>
+        <input type="number" id="participantes" class="form-control" name="participantes" min="0" required />
+      </div>
+      <div>
+        <label for="estatus">Estatus</label>
+        <select id="estatus" class="form-select" name="estatus" required>
           <option value="En proceso">En proceso</option>
           <option value="Finalizado">Finalizado</option>
           <option value="Cancelado">Cancelado</option>
         </select>
       </div>
-
-      <div class="actions">
+      <div class="btn-container">
         <button type="submit" class="btn btn-success">Guardar Proyecto</button>
-        <a href="index.html" class="btn btn-secondary">Volver al Menú Principal</a>
+        <a href="menuproyectos.html" class="btn btn-secondary">Regresar al Menú Proyectos</a>
       </div>
     </form>
     <div class="corner-bottom-left"></div>
@@ -54,8 +176,12 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       });
-      alert(res.ok ? '✅ Proyecto guardado' : '❌ Error al guardar');
-      if (res.ok) form.reset();
+      if (res.ok) {
+        alert('✅ Proyecto guardado');
+        form.reset();
+      } else {
+        alert('❌ Error al guardar');
+      }
     });
   </script>
 </body>

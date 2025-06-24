@@ -1,29 +1,109 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1"/>
-  <title>Baja de Proyectos</title>
-  <link rel="stylesheet" href="styles.css"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Baja de Proyectos - PAEC</title>
+  <link rel="stylesheet" href="../styles.css" />
   <style>
-    .container { padding-bottom: 60px; }
-    .actions { display: flex; justify-content: space-between; margin-top: 25px; flex-wrap: wrap; gap: 10px; }
-    #mensaje { margin-top: 20px; font-weight: bold; }
+    body {
+      background-color: #000a00;
+      color: #00ff00;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .container {
+      max-width: 480px;
+      margin: 40px auto;
+      padding: 30px 25px;
+      background-color: #001a00;
+      border: 2px solid #00ff00;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00ff00aa;
+      text-align: center;
+    }
+    h1 {
+      margin-bottom: 30px;
+      font-weight: 700;
+      font-size: 1.8rem;
+    }
+    label {
+      font-weight: 600;
+      font-size: 1.1rem;
+      display: block;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+    select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 1rem;
+      border-radius: 6px;
+      border: 1.5px solid #00ff00;
+      background-color: #003300;
+      color: #ccffcc;
+      margin-bottom: 25px;
+      outline: none;
+      transition: border-color 0.25s ease;
+    }
+    select:focus {
+      border-color: #99ff99;
+      background-color: #004400;
+      color: #e0ffe0;
+    }
+    button, a.btn {
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      padding: 12px 30px;
+      cursor: pointer;
+      border: none;
+      user-select: none;
+      margin: 8px 12px 0 12px;
+      min-width: 160px;
+      box-shadow: 0 0 8px #00ff00aa;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s ease;
+    }
+    button {
+      background-color: #007700;
+      color: #ccffcc;
+    }
+    button:hover {
+      background-color: #00cc00;
+      color: #003300;
+    }
+    a.btn-secondary {
+      background-color: #004400;
+      color: #aaffaa;
+      border: 1.5px solid #00ff00;
+      line-height: 1.4;
+    }
+    a.btn-secondary:hover {
+      background-color: #006600;
+      color: #d0ffd0;
+      border-color: #99ff99;
+    }
+    #mensaje {
+      margin-top: 22px;
+      min-height: 24px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>☢️ Baja de Proyecto</h1>
-    <div class="mb-3">
-      <label class="form-label">Selecciona el proyecto a eliminar:</label>
-      <select id="selectID" class="form-select">
-        <option value="">-- Cargando IDs... --</option>
-      </select>
-    </div>
+    <h1>Baja de Proyecto</h1>
 
-    <div class="actions">
-      <button id="btnEliminar" class="btn btn-danger">Eliminar Proyecto</button>
-      <a href="index.html" class="btn btn-secondary">Volver al Menú Principal</a>
+    <label for="selectID">Selecciona el ID del proyecto a eliminar:</label>
+    <select id="selectID" aria-label="Selecciona el proyecto a eliminar">
+      <option value="">-- Cargando IDs... --</option>
+    </select>
+
+    <div>
+      <button id="btnEliminar">Eliminar Proyecto</button>
+      <a href="menuproyectos.html" class="btn btn-secondary">Volver al Menú Proyectos</a>
     </div>
 
     <div id="mensaje"></div>
@@ -38,32 +118,50 @@
       try {
         const res = await fetch('/api/proyectos');
         const proyectos = await res.json();
+
         selectID.innerHTML = '<option value="">-- Selecciona un ID --</option>';
+
         proyectos.forEach(p => {
-          const o = document.createElement('option');
-          o.value = p._id;
-          o.textContent = `${p.id} - ${p.titulo}`;
-          selectID.appendChild(o);
+          const option = document.createElement('option');
+          option.value = p._id;  // Usamos _id para eliminar
+          option.textContent = `${p.id} - ${p.titulo}`;
+          selectID.appendChild(option);
         });
-      } catch (e) {
-        mensajeDiv.style.color = '#00ff00';
-        mensajeDiv.textContent = 'Error al cargar IDs: ' + e.message;
+      } catch (error) {
+        mensajeDiv.style.color = 'red';
+        mensajeDiv.textContent = 'Error al cargar IDs: ' + error.message;
       }
     }
 
     btnEliminar.addEventListener('click', async () => {
       const idMongo = selectID.value;
-      if (!idMongo) return alert('Seleccione un proyecto.');
-      if (!confirm('¿Seguro de eliminar?')) return;
+      if (!idMongo) {
+        alert('Por favor selecciona un proyecto.');
+        return;
+      }
+
+      if (!confirm('¿Estás seguro que deseas eliminar este proyecto? Esta acción no se puede deshacer.')) {
+        return;
+      }
+
       try {
-        const res = await fetch(`/api/proyectos/${idMongo}`, { method: 'DELETE' });
-        if (!res.ok) throw await res.json();
-        mensajeDiv.style.color = '#00ff00';
-        mensajeDiv.textContent = '✅ Proyecto eliminado.';
+        const res = await fetch(`/api/proyectos/${idMongo}`, {
+          method: 'DELETE'
+        });
+
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.message || 'Error al eliminar proyecto');
+        }
+
+        mensajeDiv.style.color = '#80ff80';
+        mensajeDiv.textContent = 'Proyecto eliminado correctamente.';
+
+        // Refrescar la lista después de eliminar
         cargarIDs();
-      } catch (e) {
-        mensajeDiv.style.color = '#ff0000';
-        mensajeDiv.textContent = '❌ ' + (e.message || 'Error al eliminar');
+      } catch (error) {
+        mensajeDiv.style.color = '#ff6666';
+        mensajeDiv.textContent = 'Error al eliminar proyecto: ' + error.message;
       }
     });
 
@@ -71,4 +169,3 @@
   </script>
 </body>
 </html>
-
