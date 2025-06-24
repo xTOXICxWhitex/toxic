@@ -1,3 +1,5 @@
+require('dotenv').config(); // Para leer variables .env (coloca esto al inicio)
+
 const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
@@ -8,7 +10,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-const mongoURI = process.env.MONGODB_URI;
+const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://xTOXICx:715600toxic@cluster0.hjmfyw4.mongodb.net/PAEC?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
@@ -23,8 +25,8 @@ mongoose.connect(mongoURI, {
 
 // Proyectos (sin fecha ni campos extra)
 const proyectoSchema = new mongoose.Schema({
-  id: String,
-  titulo: String,
+  id: { type: String, required: true, unique: true },
+  titulo: { type: String, required: true },
   categoria: String,
   descripcion: String,
   responsable: String,
@@ -36,7 +38,7 @@ const Proyecto = mongoose.model('Proyecto', proyectoSchema);
 
 // Registros (datos de seguimiento)
 const registroSchema = new mongoose.Schema({
-  id: String, // debe coincidir con id de proyecto
+  id: { type: String, required: true }, // debe coincidir con id de proyecto
   kilos_reciclados: Number,
   lugar: String,
   fecha_entrega: String,
@@ -87,6 +89,7 @@ app.post('/api/proyectos', async (req, res) => {
 app.put('/api/proyectos/:id', async (req, res) => {
   try {
     const actualizado = await Proyecto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!actualizado) return res.status(404).json({ message: 'Proyecto no encontrado.' });
     res.json(actualizado);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -98,8 +101,10 @@ app.delete('/api/proyectos/:id', async (req, res) => {
     const eliminado = await Proyecto.findByIdAndDelete(req.params.id);
     if (eliminado) {
       await Registro.deleteMany({ id: eliminado.id });
+      res.json({ proyectoEliminado: eliminado });
+    } else {
+      res.status(404).json({ message: 'Proyecto no encontrado.' });
     }
-    res.json({ proyectoEliminado: eliminado });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -133,6 +138,7 @@ app.post('/api/registros', async (req, res) => {
 app.put('/api/registros/:id', async (req, res) => {
   try {
     const actualizado = await Registro.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    if (!actualizado) return res.status(404).json({ message: 'Registro no encontrado.' });
     res.json(actualizado);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -142,6 +148,7 @@ app.put('/api/registros/:id', async (req, res) => {
 app.delete('/api/registros/:id', async (req, res) => {
   try {
     const eliminado = await Registro.findByIdAndDelete(req.params.id);
+    if (!eliminado) return res.status(404).json({ message: 'Registro no encontrado.' });
     res.json(eliminado);
   } catch (err) {
     res.status(500).json({ message: err.message });
