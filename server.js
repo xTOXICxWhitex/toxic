@@ -9,9 +9,12 @@ const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Servir archivos estáticos directamente desde 'public'
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Usar la variable MONGODB_URI del archivo .env, o fallback directo
+// Ya no necesitas rutas explícitas para HTML si están en public
+
 const mongoURI = process.env.MONGODB_URI || 'mongodb+srv://xTOXICx:715600toxic@cluster0.hjmfyw4.mongodb.net/PAEC?retryWrites=true&w=majority';
 
 mongoose.connect(mongoURI, {
@@ -21,11 +24,9 @@ mongoose.connect(mongoURI, {
 .then(() => console.log('✅ Conectado a MongoDB Atlas'))
 .catch(err => console.error('❌ Error de conexión a MongoDB:', err));
 
-/* ================================
-   ESQUEMAS
-================================= */
+/* ======= ESQUEMAS ======= */
 
-// Proyectos (sin fecha ni campos extra)
+// Proyecto
 const proyectoSchema = new mongoose.Schema({
   id: { type: String, required: true, unique: true },
   titulo: { type: String, required: true },
@@ -35,26 +36,21 @@ const proyectoSchema = new mongoose.Schema({
   participantes: Number,
   estatus: String
 }, { collection: 'proyectos' });
-
 const Proyecto = mongoose.model('Proyecto', proyectoSchema);
 
-// Registros (datos de seguimiento)
+// Registro
 const registroSchema = new mongoose.Schema({
-  id: { type: String, required: true }, // debe coincidir con id de proyecto
+  id: { type: String, required: true },
   kilos_reciclados: Number,
   lugar: String,
   fecha_entrega: String,
   horario: String,
   lugar_recoleccion: String
 }, { collection: 'registros' });
-
 const Registro = mongoose.model('Registro', registroSchema);
 
-/* ================================
-   FUNCIONES ÚTILES
-================================= */
+/* ======= FUNCIONES ======= */
 
-// Generar ID automático tipo A01, A02...
 async function generarNuevoID() {
   const ultimo = await Proyecto.findOne().sort({ id: -1 });
   if (!ultimo) return "A01";
@@ -62,12 +58,9 @@ async function generarNuevoID() {
   return `A${numero.toString().padStart(2, '0')}`;
 }
 
-/* ================================
-   RUTAS API
-================================= */
+/* ======= RUTAS API ======= */
 
 // PROYECTOS
-
 app.get('/api/proyectos', async (req, res) => {
   try {
     const proyectos = await Proyecto.find();
@@ -113,7 +106,6 @@ app.delete('/api/proyectos/:id', async (req, res) => {
 });
 
 // REGISTROS
-
 app.get('/api/registros', async (req, res) => {
   try {
     const registros = await Registro.find();
@@ -157,11 +149,8 @@ app.delete('/api/registros/:id', async (req, res) => {
   }
 });
 
-/* ================================
-   CONSULTAS COMBINADAS
-================================= */
+/* ======= CONSULTAS COMBINADAS ======= */
 
-// Buscar por ID (proyecto + sus registros)
 app.get('/api/buscar/:id', async (req, res) => {
   try {
     const id = req.params.id.toUpperCase();
@@ -178,16 +167,12 @@ app.get('/api/buscar/:id', async (req, res) => {
   }
 });
 
-// Visualizar todo (proyectos + sus registros)
 app.get('/api/visualizartodo', async (req, res) => {
   try {
     const proyectos = await Proyecto.find();
     const resultado = await Promise.all(proyectos.map(async (proyecto) => {
       const registros = await Registro.find({ id: proyecto.id });
-      return {
-        proyecto,
-        registros
-      };
+      return { proyecto, registros };
     }));
     res.json(resultado);
   } catch (err) {
@@ -195,9 +180,7 @@ app.get('/api/visualizartodo', async (req, res) => {
   }
 });
 
-/* ================================
-   INICIAR SERVIDOR
-================================= */
+/* ======= INICIAR SERVIDOR ======= */
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor corriendo en puerto ${PORT}`);
