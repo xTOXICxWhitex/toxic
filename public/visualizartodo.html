@@ -1,68 +1,103 @@
-<script>
-  async function cargarTodo() {
-    const cont = document.getElementById('contenido');
-    cont.innerHTML = '<p>Cargando datos...</p>';
-
-    try {
-      const res = await fetch('/api/visualizartodo');
-      const datos = await res.json();
-
-      if (!Array.isArray(datos) || datos.length === 0) {
-        cont.innerHTML = '<p>No hay proyectos ni registros.</p>';
-        return;
-      }
-
-      let html = `
-        <div style="overflow-x: auto;">
-          <table class="table table-bordered table-striped" style="min-width: 1200px;">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Título</th>
-                <th>Categoría</th>
-                <th>Descripción</th>
-                <th>Responsable</th>
-                <th>Participantes</th>
-                <th>Estatus</th>
-                <th>Kilos Reciclados</th>
-                <th>Lugar</th>
-                <th>Fecha de Entrega</th>
-                <th>Horario</th>
-                <th>Lugar de Recolección</th>
-              </tr>
-            </thead>
-            <tbody>
-      `;
-
-      datos.forEach(d => {
-        html += `
-          <tr>
-            <td>${d.idProyecto || ''}</td>
-            <td>${d.titulo || ''}</td>
-            <td>${d.categoria || ''}</td>
-            <td>${d.descripcion || ''}</td>
-            <td>${d.responsable || ''}</td>
-            <td>${d.participantes || ''}</td>
-            <td>${d.estatus || ''}</td>
-            <td>${d.kilos_reciclados || ''}</td>
-            <td>${d.lugar || ''}</td>
-            <td>${d.fecha_entrega || ''}</td>
-            <td>${d.horario || ''}</td>
-            <td>${d.lugar_recoleccion || ''}</td>
-          </tr>
-        `;
-      });
-
-      html += '</tbody></table></div>';
-      cont.innerHTML = html;
-
-    } catch (error) {
-      cont.innerHTML = `<p>Error al cargar los datos: ${error.message}</p>`;
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Visualizar Todo - PAEC</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .scroll-table {
+      overflow-x: auto;
+      max-width: 100%;
     }
-  }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 800px;
+    }
+    th, td {
+      border: 1px solid #00ff00;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #003300;
+      color: #00ff00;
+    }
+    td {
+      background-color: #001100;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Visualizar Todo - Proyectos y Registros</h1>
 
-  window.onload = cargarTodo;
-</script>
+    <div class="scroll-table" style="margin-top: 25px;">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Categoría</th>
+            <th>Descripción</th>
+            <th>Responsable</th>
+            <th>Participantes</th>
+            <th>Estatus</th>
+            <th>Kilos Reciclados</th>
+            <th>Lugar</th>
+            <th>Fecha de Entrega</th>
+            <th>Horario</th>
+            <th>Lugar de Recolección</th>
+          </tr>
+        </thead>
+        <tbody id="contenido"></tbody>
+      </table>
+    </div>
 
+    <a href="index.html" class="btn btn-secondary" style="margin-top: 30px; display: inline-block;">Volver al Menú Principal</a>
+  </div>
 
+  <script>
+    async function cargarTodo() {
+      const cont = document.getElementById('contenido');
+      cont.innerHTML = '';
+
+      try {
+        const res = await fetch('/api/visualizartodo');
+        const datos = await res.json();
+
+        if (!Array.isArray(datos) || datos.length === 0) {
+          cont.innerHTML = '<tr><td colspan="12">No hay datos para mostrar.</td></tr>';
+          return;
+        }
+
+        datos.forEach(item => {
+          cont.innerHTML += `
+            <tr>
+              <td>${item.idProyecto || ''}</td>
+              <td>${item.titulo || ''}</td>
+              <td>${item.categoria || ''}</td>
+              <td>${item.descripcion || ''}</td>
+              <td>${item.responsable || ''}</td>
+              <td>${item.participantes || ''}</td>
+              <td>${item.estatus || ''}</td>
+              <td>${item.kilos_reciclados || ''}</td>
+              <td>${item.lugar || ''}</td>
+              <td>${item.fecha_entrega || ''}</td>
+              <td>${item.horario || ''}</td>
+              <td>${item.lugar_recoleccion || ''}</td>
+            </tr>
+          `;
+        });
+
+      } catch (error) {
+        cont.innerHTML = `<tr><td colspan="12">Error al cargar los datos: ${error.message}</td></tr>`;
+      }
+    }
+
+    window.onload = cargarTodo;
+  </script>
+</body>
+</html>
 
