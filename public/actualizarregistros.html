@@ -57,7 +57,7 @@
       border: 1.5px solid #00ff00;
       background-color: #003300;
       color: #ccffcc;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       outline: none;
       transition: border-color 0.25s ease;
     }
@@ -104,6 +104,10 @@
       color: #d0ffd0;
       border-color: #99ff99;
     }
+    .btn-container {
+      text-align: center;
+      margin-bottom: 25px;
+    }
   </style>
 </head>
 <body>
@@ -113,6 +117,11 @@
     <select id="registro-select" class="form-select" aria-label="Selecciona un registro">
       <option selected disabled>Selecciona un registro</option>
     </select>
+
+    <!-- ✅ Botón "Regresar" SIEMPRE visible -->
+    <div class="btn-container">
+      <a href="menuregistros.html" class="btn btn-secondary" aria-label="Regresar al menú de registros">Regresar</a>
+    </div>
 
     <form id="form-actualizar" style="display: none;" aria-live="polite" aria-relevant="all">
       <label for="input-id">ID del Proyecto</label>
@@ -134,7 +143,6 @@
       <input type="text" id="input-lugar-rec" class="form-control" name="lugar_recoleccion" required />
 
       <button type="submit" class="btn btn-warning" aria-label="Guardar cambios en el registro">Guardar Cambios</button>
-      <a href="menuregistros.html" class="btn btn-secondary" aria-label="Regresar al menú de registros">Regresar</a>
     </form>
   </div>
 
@@ -145,14 +153,18 @@
     let registros = [];
 
     async function cargarRegistros() {
-      const res = await fetch('/api/registros');
-      registros = await res.json();
-      registros.forEach(r => {
-        const option = document.createElement('option');
-        option.value = r._id;
-        option.textContent = `${r.id} - ${r.lugar}`;
-        select.appendChild(option);
-      });
+      try {
+        const res = await fetch('/api/registros');
+        registros = await res.json();
+        registros.forEach(r => {
+          const option = document.createElement('option');
+          option.value = r._id;
+          option.textContent = `${r.id} - ${r.lugar}`;
+          select.appendChild(option);
+        });
+      } catch (error) {
+        alert('❌ Error al cargar registros');
+      }
     }
 
     select.addEventListener('change', () => {
